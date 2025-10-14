@@ -660,3 +660,31 @@ def backup_tool(wp_path: str, action: str, output: str = None, backup: str = Non
             
     except Exception as e:
         return f"Error running backup tool: {str(e)}"
+
+
+# === WORDPRESS HOSTING AND DEPLOYMENT ===
+
+@mcp.resource("wordpress://hosting/wordpress-hosting-providers")
+def get_wordpress_hosting_providers() -> str:
+    """WordPress Hosting Providers - Comprehensive guide to hosting options, features, and selection criteria"""
+    return load_resource_content("hosting", "wordpress-hosting-providers")
+
+@mcp.resource("wordpress://hosting/deployment-strategies")
+def get_deployment_strategies() -> str:
+    """WordPress Deployment Strategies - Modern deployment methodologies, tools, and best practices"""
+    return load_resource_content("hosting", "deployment-strategies")
+
+@mcp.resource("wordpress://hosting/server-configuration")
+def get_server_configuration() -> str:
+    """WordPress Server Configuration - Web server, PHP, database, and infrastructure optimization"""
+    return load_resource_content("hosting", "server-configuration")
+
+@mcp.resource("wordpress://hosting/ssl-security")
+def get_ssl_security() -> str:
+    """WordPress SSL and Security Configuration - SSL/TLS setup, security headers, and hardening"""
+    return load_resource_content("hosting", "ssl-security")
+
+@mcp.resource("wordpress://hosting/monitoring-logging")
+def get_monitoring_logging() -> str:
+    """WordPress Monitoring and Logging - Comprehensive monitoring, logging, and alerting strategies"""
+    return load_resource_content("hosting", "monitoring-logging")
