@@ -343,3 +343,29 @@ def get_sidebars_widgets() -> str:
 def get_post_thumbnails() -> str:
     """WordPress Post Thumbnails - Featured images, custom sizes, and optimization"""
     return load_resource_content("themes", "post-thumbnails")
+
+
+# === ADDITIONAL CODING STANDARDS RESOURCES ===
+
+@mcp.resource("wordpress://standards/css-coding-standards")
+def get_css_coding_standards() -> str:
+    """WordPress CSS Coding Standards - Formatting, BEM methodology, responsive design"""
+    return load_resource_content("standards", "css-coding-standards")
+
+
+@mcp.resource("wordpress://standards/html-coding-standards")
+def get_html_coding_standards() -> str:
+    """WordPress HTML Coding Standards - Semantic markup, accessibility, security"""
+    return load_resource_content("standards", "html-coding-standards")
+
+
+@mcp.resource("wordpress://standards/sql-best-practices")
+def get_sql_best_practices() -> str:
+    """WordPress SQL Best Practices - Prepared statements, security, optimization"""
+    return load_resource_content("standards", "sql-best-practices")
+
+
+@mcp.resource("wordpress://standards/accessibility-standards")
+def get_accessibility_standards() -> str:
+    """WordPress Accessibility Standards - WCAG 2.1 AA compliance, ARIA, testing"""
+    return load_resource_content("standards", "accessibility-standards")
