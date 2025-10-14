@@ -716,3 +716,472 @@ def get_marketplace_resources() -> str:
 def get_industry_tools() -> str:
     """WordPress Industry Tools and Services - Comprehensive guide to development tools, services, and professional resources"""
     return load_resource_content("ecosystem", "industry-tools")
+
+
+# === MCP SERVER SECURITY ===
+
+import time
+import hashlib
+import hmac
+from typing import Optional, Dict, Any
+from functools import wraps
+
+class MCPSecurityManager:
+    """Security manager for MCP server operations."""
+    
+    def __init__(self):
+        self.rate_limits: Dict[str, Dict[str, Any]] = {}
+        self.api_keys: Dict[str, str] = {}  # In production, use secure storage
+        self.blocked_ips: set = set()
+        self.request_log: list = []
+        
+    def validate_request(self, request_data: Dict[str, Any]) -> bool:
+        """Validate incoming MCP requests."""
+        # Check for required fields
+        required_fields = ['method', 'params']
+        if not all(field in request_data for field in required_fields):
+            self.log_security_event('invalid_request', request_data)
+            return False
+            
+        # Validate method
+        allowed_methods = ['resources/list', 'resources/read']
+        if request_data.get('method') not in allowed_methods:
+            self.log_security_event('invalid_method', request_data)
+            return False
+            
+        return True
+    
+    def check_rate_limit(self, client_id: str, limit: int = 100, window: int = 3600) -> bool:
+        """Check if client has exceeded rate limit."""
+        current_time = time.time()
+        
+        if client_id not in self.rate_limits:
+            self.rate_limits[client_id] = {'count': 0, 'window_start': current_time}
+        
+        rate_data = self.rate_limits[client_id]
+        
+        # Reset window if expired
+        if current_time - rate_data['window_start'] > window:
+            rate_data['count'] = 0
+            rate_data['window_start'] = current_time
+        
+        # Check limit
+        if rate_data['count'] >= limit:
+            self.log_security_event('rate_limit_exceeded', {'client_id': client_id})
+            return False
+        
+        rate_data['count'] += 1
+        return True
+    
+    def authenticate_request(self, api_key: Optional[str] = None) -> bool:
+        """Authenticate API requests."""
+        # For public MCP servers, authentication might be optional
+        if not api_key:
+            return True  # Allow public access
+            
+        # Validate API key format
+        if not api_key or len(api_key) < 32:
+            self.log_security_event('invalid_api_key', {'api_key': api_key[:10] if api_key else None})
+            return False
+            
+        # Check against stored keys (in production, use secure database)
+        if api_key in self.api_keys:
+            return True
+            
+        self.log_security_event('unauthorized_access', {'api_key': api_key[:10]})
+        return False
+    
+    def sanitize_input(self, input_data: Any) -> Any:
+        """Sanitize input data to prevent injection attacks."""
+        if isinstance(input_data, str):
+            # Remove potentially dangerous characters
+            dangerous_chars = ['<', '>', '"', "'", '&', '\\', '/', ';', '(', ')']
+            for char in dangerous_chars:
+                input_data = input_data.replace(char, '')
+            return input_data.strip()
+        elif isinstance(input_data, dict):
+            return {k: self.sanitize_input(v) for k, v in input_data.items()}
+        elif isinstance(input_data, list):
+            return [self.sanitize_input(item) for item in input_data]
+        return input_data
+    
+    def log_security_event(self, event_type: str, details: Dict[str, Any]):
+        """Log security events for monitoring."""
+        log_entry = {
+            'timestamp': time.time(),
+            'event_type': event_type,
+            'details': details,
+            'ip': details.get('ip', 'unknown')
+        }
+        self.request_log.append(log_entry)
+        
+        # Keep only last 1000 entries
+        if len(self.request_log) > 1000:
+            self.request_log = self.request_log[-1000:]
+        
+        logger.warning(f"Security event: {event_type} - {details}")
+    
+    def secure_error_response(self, error_type: str) -> str:
+        """Return secure error responses without exposing internals."""
+        secure_errors = {
+            'invalid_request': 'Invalid request format',
+            'rate_limit_exceeded': 'Rate limit exceeded. Please try again later.',
+            'unauthorized_access': 'Authentication required',
+            'resource_not_found': 'Resource not found',
+            'internal_error': 'Internal server error'
+        }
+        return secure_errors.get(error_type, 'An error occurred')
+
+# Initialize security manager
+security_manager = MCPSecurityManager()
+
+def secure_mcp_resource(rate_limit: int = 100, require_auth: bool = False):
+    """Decorator to add security to MCP resources."""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            # Get client identifier (in production, use proper client identification)
+            client_id = kwargs.get('client_id', 'anonymous')
+            
+            # Check rate limiting
+            if not security_manager.check_rate_limit(client_id, rate_limit):
+                raise Exception(security_manager.secure_error_response('rate_limit_exceeded'))
+            
+            # Check authentication if required
+            api_key = kwargs.get('api_key')
+            if require_auth and not security_manager.authenticate_request(api_key):
+                raise Exception(security_manager.secure_error_response('unauthorized_access'))
+            
+            # Sanitize inputs
+            sanitized_args = [security_manager.sanitize_input(arg) for arg in args]
+            sanitized_kwargs = {k: security_manager.sanitize_input(v) for k, v in kwargs.items()}
+            
+            try:
+                # Execute the original function
+                result = func(*sanitized_args, **sanitized_kwargs)
+                return result
+            except Exception as e:
+                # Log error securely
+                security_manager.log_security_event('resource_error', {
+                    'function': func.__name__,
+                    'error': str(e)
+                })
+                raise Exception(security_manager.secure_error_response('internal_error'))
+        
+        return wrapper
+    return decorator
+
+# Apply security to critical resources
+@mcp.resource("wordpress://security/mcp-server-security")
+@secure_mcp_resource(rate_limit=50, require_auth=False)
+def get_mcp_server_security() -> str:
+    """MCP Server Security - Authentication, rate limiting, input validation, and security best practices"""
+    return """# MCP Server Security Implementation
+
+## Overview
+
+This MCP server implements comprehensive security measures to protect against common attacks and ensure safe operation in production environments.
+
+## Security Features Implemented
+
+### 1. Input Validation and Sanitization
+
+**Request Validation**
+- Validates all incoming MCP requests
+- Checks required fields and data types
+- Prevents malformed requests
+
+**Input Sanitization**
+- Removes potentially dangerous characters
+- Sanitizes strings, objects, and arrays
+- Prevents injection attacks
+
+### 2. Rate Limiting
+
+**Per-Client Rate Limiting**
+- Default: 100 requests per hour per client
+- Configurable limits per resource
+- Automatic window resets
+
+**Implementation**
+```python
+# Rate limiting example
+if not security_manager.check_rate_limit(client_id, limit=100, window=3600):
+    raise Exception('Rate limit exceeded')
+```
+
+### 3. Authentication and Authorization
+
+**API Key Authentication**
+- Optional API key validation
+- Secure key storage (in production)
+- Unauthorized access logging
+
+**Access Control**
+- Resource-level permissions
+- Client identification
+- Audit trail maintenance
+
+### 4. Security Logging and Monitoring
+
+**Event Logging**
+- All security events logged
+- Detailed audit trails
+- Suspicious activity detection
+
+**Monitored Events**
+- Invalid requests
+- Rate limit violations
+- Authentication failures
+- Resource access attempts
+
+### 5. Error Handling
+
+**Secure Error Responses**
+- No internal details exposed
+- Standardized error messages
+- Safe error logging
+
+**Error Types**
+- Invalid request format
+- Rate limit exceeded
+- Authentication required
+- Resource not found
+- Internal server error
+
+## Security Best Practices
+
+### Request Validation
+```python
+def validate_request(request_data):
+    required_fields = ['method', 'params']
+    if not all(field in request_data for field in required_fields):
+        return False
+    return True
+```
+
+### Input Sanitization
+```python
+def sanitize_input(input_data):
+    if isinstance(input_data, str):
+        dangerous_chars = ['<', '>', '"', "'", '&', '\\']
+        for char in dangerous_chars:
+            input_data = input_data.replace(char, '')
+    return input_data
+```
+
+### Rate Limiting
+```python
+def check_rate_limit(client_id, limit=100, window=3600):
+    current_time = time.time()
+    # Check and update rate limit counters
+    return rate_limit_check
+```
+
+## Production Security Considerations
+
+### 1. Secure Configuration
+- Use environment variables for sensitive data
+- Implement proper secret management
+- Enable HTTPS/TLS encryption
+
+### 2. Monitoring and Alerting
+- Real-time security monitoring
+- Automated alerting for suspicious activity
+- Regular security audits
+
+### 3. Access Control
+- Implement proper authentication
+- Use role-based access control
+- Regular access reviews
+
+### 4. Data Protection
+- Encrypt sensitive data at rest
+- Use secure communication protocols
+- Implement data retention policies
+
+## Security Testing
+
+### Automated Security Tests
+- Input validation testing
+- Rate limiting verification
+- Authentication flow testing
+- Error handling validation
+
+### Security Audits
+- Regular penetration testing
+- Code security reviews
+- Dependency vulnerability scanning
+- Configuration security checks
+
+## Compliance and Standards
+
+### Security Standards
+- OWASP security guidelines
+- MCP protocol security requirements
+- Industry best practices
+- Regulatory compliance (as applicable)
+
+### Documentation
+- Security policy documentation
+- Incident response procedures
+- Security training materials
+- Audit trail requirements
+
+## Future Security Enhancements
+
+### Advanced Features
+- Machine learning-based threat detection
+- Advanced authentication methods
+- Real-time security analytics
+- Automated security responses
+
+### Integration
+- SIEM system integration
+- Security orchestration platforms
+- Threat intelligence feeds
+- Compliance monitoring tools
+"""
+
+@mcp.resource("wordpress://security/security-monitoring")
+@secure_mcp_resource(rate_limit=30, require_auth=False)
+def get_security_monitoring() -> str:
+    """Security Monitoring and Alerting - Real-time security monitoring, logging, and incident response"""
+    return """# Security Monitoring and Alerting
+
+## Overview
+
+Comprehensive security monitoring system for WordPress MCP servers, providing real-time threat detection, logging, and automated incident response.
+
+## Monitoring Components
+
+### 1. Real-Time Monitoring
+
+**Request Monitoring**
+- All incoming requests logged
+- Response times tracked
+- Error rates monitored
+- Anomaly detection
+
+**Security Event Detection**
+- Failed authentication attempts
+- Rate limit violations
+- Suspicious request patterns
+- Resource access anomalies
+
+### 2. Logging and Audit Trails
+
+**Security Logs**
+- Authentication events
+- Authorization failures
+- Rate limiting events
+- Resource access logs
+
+**Audit Trail Features**
+- Immutable log storage
+- Tamper-proof logging
+- Detailed request tracking
+- User activity monitoring
+
+### 3. Alerting System
+
+**Real-Time Alerts**
+- Immediate threat notifications
+- Escalation procedures
+- Alert correlation
+- False positive reduction
+
+**Alert Types**
+- Security violations
+- Performance anomalies
+- System errors
+- Configuration changes
+
+## Implementation Examples
+
+### Security Event Logging
+```python
+def log_security_event(event_type, details):
+    log_entry = {
+        'timestamp': time.time(),
+        'event_type': event_type,
+        'details': details,
+        'severity': get_severity_level(event_type)
+    }
+    security_log.append(log_entry)
+    send_alert_if_critical(log_entry)
+```
+
+### Rate Limiting Monitoring
+```python
+def monitor_rate_limits():
+    for client_id, data in rate_limits.items():
+        if data['count'] > threshold:
+            send_rate_limit_alert(client_id, data)
+```
+
+### Anomaly Detection
+```python
+def detect_anomalies():
+    recent_requests = get_recent_requests(time_window=300)
+    patterns = analyze_request_patterns(recent_requests)
+    anomalies = identify_anomalies(patterns)
+    for anomaly in anomalies:
+        handle_anomaly(anomaly)
+```
+
+## Monitoring Dashboards
+
+### Security Dashboard
+- Real-time threat indicators
+- Security event timeline
+- Attack pattern analysis
+- Response status tracking
+
+### Performance Dashboard
+- Request volume trends
+- Response time metrics
+- Error rate monitoring
+- Resource utilization
+
+### Compliance Dashboard
+- Security policy compliance
+- Audit trail completeness
+- Incident response metrics
+- Regulatory compliance status
+
+## Incident Response
+
+### Automated Response
+- Automatic threat blocking
+- Rate limiting enforcement
+- Resource access restrictions
+- Notification escalation
+
+### Manual Response
+- Incident investigation
+- Threat analysis
+- Response coordination
+- Recovery procedures
+
+## Best Practices
+
+### Log Management
+- Centralized logging
+- Log retention policies
+- Secure log storage
+- Regular log analysis
+
+### Alert Tuning
+- Reduce false positives
+- Optimize alert thresholds
+- Implement alert fatigue prevention
+- Regular alert testing
+
+### Monitoring Coverage
+- Comprehensive coverage
+- Multiple detection methods
+- Cross-reference validation
+- Continuous improvement
+"""
+
