@@ -369,3 +369,23 @@ def get_sql_best_practices() -> str:
 def get_accessibility_standards() -> str:
     """WordPress Accessibility Standards - WCAG 2.1 AA compliance, ARIA, testing"""
     return load_resource_content("standards", "accessibility-standards")
+
+
+# === ADVANCED TOPICS RESOURCES ===
+
+@mcp.resource("wordpress://advanced/multisite-development")
+def get_multisite_development() -> str:
+    """WordPress Multisite Development - Network management, site switching, user management"""
+    return load_resource_content("advanced", "multisite-development")
+
+
+@mcp.resource("wordpress://advanced/woocommerce-development")
+def get_woocommerce_development() -> str:
+    """WooCommerce Development - E-commerce functionality, payment gateways, product management"""
+    return load_resource_content("advanced", "woocommerce-development")
+
+
+@mcp.resource("wordpress://advanced/performance-optimization")
+def get_performance_optimization() -> str:
+    """WordPress Performance Optimization - Caching, database optimization, asset optimization"""
+    return load_resource_content("advanced", "performance-optimization")
