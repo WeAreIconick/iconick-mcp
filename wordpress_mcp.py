@@ -271,3 +271,75 @@ def get_query_monitor() -> str:
 def get_wp_cli() -> str:
     """WordPress CLI (WP-CLI) - Command-line interface, automation, management"""
     return load_resource_content("tools", "wp-cli")
+
+
+# === COMPLETE BLOCK EDITOR RESOURCES ===
+
+@mcp.resource("wordpress://blocks/innerblocks")
+def get_innerblocks() -> str:
+    """WordPress InnerBlocks - Nested block structures, complex layouts"""
+    return load_resource_content("blocks", "innerblocks")
+
+
+@mcp.resource("wordpress://blocks/block-transforms")
+def get_block_transforms() -> str:
+    """WordPress Block Transforms - Converting between block types, migration"""
+    return load_resource_content("blocks", "block-transforms")
+
+
+@mcp.resource("wordpress://blocks/wordpress-packages")
+def get_wordpress_packages() -> str:
+    """WordPress @wordpress packages - Components, data, i18n, utilities"""
+    return load_resource_content("blocks", "wordpress-packages")
+
+
+# === ADDITIONAL REST API RESOURCES ===
+
+@mcp.resource("wordpress://rest-api/authentication")
+def get_rest_authentication() -> str:
+    """WordPress REST API Authentication - Application passwords, OAuth, JWT, nonces"""
+    return load_resource_content("rest-api", "authentication")
+
+
+@mcp.resource("wordpress://rest-api/schema")
+def get_rest_schema() -> str:
+    """WordPress REST API Schema - Schema definition, validation, documentation"""
+    return load_resource_content("rest-api", "schema")
+
+
+@mcp.resource("wordpress://rest-api/extensions")
+def get_rest_extensions() -> str:
+    """WordPress REST API Extensions - Endpoint modifications, custom fields, bulk operations"""
+    return load_resource_content("rest-api", "extensions")
+
+
+# === ADDITIONAL THEME DEVELOPMENT RESOURCES ===
+
+@mcp.resource("wordpress://themes/block-themes")
+def get_block_themes() -> str:
+    """WordPress Block Themes - Modern theme development with HTML templates and block patterns"""
+    return load_resource_content("themes", "block-themes")
+
+
+@mcp.resource("wordpress://themes/child-themes")
+def get_child_themes() -> str:
+    """WordPress Child Themes - Extending existing themes without losing customizations"""
+    return load_resource_content("themes", "child-themes")
+
+
+@mcp.resource("wordpress://themes/navigation-menus")
+def get_navigation_menus() -> str:
+    """WordPress Navigation Menus - Creating and customizing site navigation"""
+    return load_resource_content("themes", "navigation-menus")
+
+
+@mcp.resource("wordpress://themes/sidebars-widgets")
+def get_sidebars_widgets() -> str:
+    """WordPress Sidebars & Widgets - Creating flexible content areas and custom widgets"""
+    return load_resource_content("themes", "sidebars-widgets")
+
+
+@mcp.resource("wordpress://themes/post-thumbnails")
+def get_post_thumbnails() -> str:
+    """WordPress Post Thumbnails - Featured images, custom sizes, and optimization"""
+    return load_resource_content("themes", "post-thumbnails")
