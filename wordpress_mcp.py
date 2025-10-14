@@ -429,3 +429,234 @@ def get_phpunit_testing() -> str:
 def get_quality_assurance() -> str:
     """Quality Assurance - Code quality tools, security testing, and automated workflows"""
     return load_resource_content("testing", "quality-assurance")
+
+
+# === MCP TOOLS IMPLEMENTATION ===
+
+@mcp.tool()
+def wordpress_installer(target_dir: str, version: str = "latest", site_url: str = "http://localhost", 
+                       site_title: str = "My WordPress Site", admin_user: str = "admin", 
+                       admin_pass: str = "admin", admin_email: str = "admin@example.com",
+                       db_host: str = "localhost", db_name: str = "wordpress", 
+                       db_user: str = "root", db_pass: str = "", plugins: list = None, 
+                       themes: list = None) -> str:
+    """Install WordPress with custom configuration and optional plugins/themes"""
+    import subprocess
+    import sys
+    
+    try:
+        # Run the WordPress installer tool
+        cmd = [
+            sys.executable, "tools/wordpress_installer.py", target_dir,
+            "--version", version,
+            "--site-url", site_url,
+            "--site-title", site_title,
+            "--admin-user", admin_user,
+            "--admin-pass", admin_pass,
+            "--admin-email", admin_email,
+            "--db-host", db_host,
+            "--db-name", db_name,
+            "--db-user", db_user,
+            "--db-pass", db_pass
+        ]
+        
+        if plugins:
+            cmd.extend(["--plugins"] + plugins)
+        if themes:
+            cmd.extend(["--themes"] + themes)
+        
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(__file__))
+        
+        if result.returncode == 0:
+            return f"WordPress installed successfully in {target_dir}\nOutput: {result.stdout}"
+        else:
+            return f"WordPress installation failed: {result.stderr}"
+            
+    except Exception as e:
+        return f"Error running WordPress installer: {str(e)}"
+
+
+@mcp.tool()
+def plugin_manager(wp_path: str, action: str, plugin: str = None, plugins: list = None, 
+                  activate: bool = False, status: str = "all", limit: int = 10, 
+                  query: str = None) -> str:
+    """Manage WordPress plugins - install, activate, deactivate, search, list"""
+    import subprocess
+    import sys
+    
+    try:
+        cmd = [sys.executable, "tools/plugin_manager.py", "--wp-path", wp_path, action]
+        
+        if action == "list":
+            cmd.extend(["--status", status])
+        elif action == "search":
+            if not query:
+                return "Search query is required for search action"
+            cmd.extend([query, "--limit", str(limit)])
+        elif action in ["install", "activate", "deactivate", "uninstall", "update"]:
+            if plugin:
+                cmd.append(plugin)
+                if action == "install" and activate:
+                    cmd.append("--activate")
+            elif plugins:
+                cmd.extend(plugins)
+                if action == "install" and activate:
+                    cmd.append("--activate")
+            else:
+                return f"Plugin name or list is required for {action} action"
+        
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(__file__))
+        
+        if result.returncode == 0:
+            return f"Plugin management completed successfully\nOutput: {result.stdout}"
+        else:
+            return f"Plugin management failed: {result.stderr}"
+            
+    except Exception as e:
+        return f"Error running plugin manager: {str(e)}"
+
+
+@mcp.tool()
+def theme_customizer(wp_path: str, action: str, theme: str = None, themes: list = None,
+                    parent: str = None, child_name: str = None, child_slug: str = None,
+                    status: str = "all", limit: int = 10, query: str = None,
+                    mod_key: str = None, mod_value: str = None, content: str = None,
+                    output: str = None) -> str:
+    """Manage WordPress themes - install, activate, create child themes, customize"""
+    import subprocess
+    import sys
+    
+    try:
+        cmd = [sys.executable, "tools/theme_customizer.py", "--wp-path", wp_path, action]
+        
+        if action == "list":
+            cmd.extend(["--status", status])
+        elif action == "search":
+            if not query:
+                return "Search query is required for search action"
+            cmd.extend([query, "--limit", str(limit)])
+        elif action in ["install", "activate", "delete", "update"]:
+            if theme:
+                cmd.append(theme)
+            elif themes:
+                cmd.extend(themes)
+            else:
+                return f"Theme name or list is required for {action} action"
+        elif action == "child":
+            if not parent or not child_name:
+                return "Parent theme and child name are required for child theme creation"
+            cmd.extend([parent, child_name])
+            if child_slug:
+                cmd.extend(["--slug", child_slug])
+        elif action == "mod":
+            if mod_key and mod_value:
+                cmd.extend(["set", mod_key, mod_value])
+            elif mod_key:
+                cmd.extend(["get", mod_key])
+            else:
+                cmd.append("list")
+        elif action == "css":
+            if not content:
+                return "CSS content is required for css action"
+            cmd.append(content)
+            if output:
+                cmd.extend(["--output", output])
+        
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(__file__))
+        
+        if result.returncode == 0:
+            return f"Theme management completed successfully\nOutput: {result.stdout}"
+        else:
+            return f"Theme management failed: {result.stderr}"
+            
+    except Exception as e:
+        return f"Error running theme customizer: {str(e)}"
+
+
+@mcp.tool()
+def database_manager(wp_path: str, action: str, table: str = None, output: str = None,
+                    backup: str = None, compress: bool = False, search: str = None,
+                    replace: str = None, execute: bool = False, sql: str = None) -> str:
+    """Manage WordPress database - backup, restore, optimize, query, search-replace"""
+    import subprocess
+    import sys
+    
+    try:
+        cmd = [sys.executable, "tools/database_manager.py", "--wp-path", wp_path, action]
+        
+        if action == "table-info":
+            if not table:
+                return "Table name is required for table-info action"
+            cmd.append(table)
+        elif action == "backup":
+            if not output:
+                return "Output file path is required for backup action"
+            cmd.append(output)
+            if compress:
+                cmd.append("--compress")
+        elif action == "restore":
+            if not backup:
+                return "Backup file path is required for restore action"
+            cmd.append(backup)
+        elif action == "search-replace":
+            if not search or not replace:
+                return "Search and replace strings are required for search-replace action"
+            cmd.extend([search, replace])
+            if execute:
+                cmd.append("--execute")
+        elif action == "query":
+            if not sql:
+                return "SQL query is required for query action"
+            cmd.append(sql)
+        
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(__file__))
+        
+        if result.returncode == 0:
+            return f"Database management completed successfully\nOutput: {result.stdout}"
+        else:
+            return f"Database management failed: {result.stderr}"
+            
+    except Exception as e:
+        return f"Error running database manager: {str(e)}"
+
+
+@mcp.tool()
+def backup_tool(wp_path: str, action: str, output: str = None, backup: str = None,
+               target: str = None, directory: str = None, compress: bool = False) -> str:
+    """Manage WordPress backups - create, restore, list, verify backups"""
+    import subprocess
+    import sys
+    
+    try:
+        cmd = [sys.executable, "tools/backup_tool.py", "--wp-path", wp_path, action]
+        
+        if action == "backup":
+            if not output:
+                return "Output file path is required for backup action"
+            cmd.append(output)
+            if compress:
+                cmd.append("--compress")
+        elif action == "restore":
+            if not backup:
+                return "Backup file path is required for restore action"
+            cmd.append(backup)
+            if target:
+                cmd.extend(["--target", target])
+        elif action == "list":
+            if not directory:
+                return "Directory path is required for list action"
+            cmd.append(directory)
+        elif action == "verify":
+            if not backup:
+                return "Backup file path is required for verify action"
+            cmd.append(backup)
+        
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=os.path.dirname(__file__))
+        
+        if result.returncode == 0:
+            return f"Backup operation completed successfully\nOutput: {result.stdout}"
+        else:
+            return f"Backup operation failed: {result.stderr}"
+            
+    except Exception as e:
+        return f"Error running backup tool: {str(e)}"
