@@ -1,7 +1,7 @@
 """
-WordPress Development MCP Server - Comprehensive Edition
+WordPress Development MCP Server - Expanded Edition
 
-Provides complete WordPress development resources including documentation,
+Provides comprehensive WordPress development resources including documentation,
 coding standards, best practices, and code examples through the MCP protocol.
 """
 
@@ -38,6 +38,38 @@ def get_database_api() -> str:
 def get_http_api() -> str:
     """WordPress HTTP API - wp_remote_get/post, handling responses"""
     return load_resource_content("core", "http")
+
+
+@mcp.resource("wordpress://core/options")
+def get_options_api() -> str:
+    """WordPress Options API - get_option, update_option, autoload"""
+    return load_resource_content("core", "options")
+
+
+@mcp.resource("wordpress://core/transients")
+def get_transients_api() -> str:
+    """WordPress Transients API - Caching with TTL, object cache integration"""
+    return load_resource_content("core", "transients")
+
+
+@mcp.resource("wordpress://core/rewrite")
+def get_rewrite_api() -> str:
+    """WordPress Rewrite API - Custom URLs, query vars, permalinks"""
+    return load_resource_content("core", "rewrite")
+
+
+@mcp.resource("wordpress://core/settings")
+def get_settings_api() -> str:
+    """WordPress Settings API - register_setting, settings sections"""
+    return load_resource_content("core", "settings")
+
+
+# === THEME DEVELOPMENT ===
+
+@mcp.resource("wordpress://themes/template-hierarchy")
+def get_template_hierarchy() -> str:
+    """WordPress Template Hierarchy - Template selection, conditional tags (CRITICAL)"""
+    return load_resource_content("themes", "template-hierarchy")
 
 
 # === SECURITY BEST PRACTICES ===
@@ -117,7 +149,75 @@ def get_cpt_examples() -> str:
 
 
 if __name__ == "__main__":
-    print("WordPress Development MCP Server")
+    print("WordPress Development MCP Server - Expanded Edition")
     print(f"Resources directory: {RESOURCES_DIR}")
     resource_files = list(RESOURCES_DIR.rglob("*.md"))
     print(f"Total resource files: {len(resource_files)}")
+    
+    # List all available resources
+    print("\nAvailable Resources:")
+    for resource_file in sorted(resource_files):
+        rel_path = resource_file.relative_to(RESOURCES_DIR)
+        category = rel_path.parts[0]
+        topic = rel_path.stem
+        print(f"  wordpress://{category}/{topic}")
+
+
+# === THEME DEVELOPMENT ===
+
+@mcp.resource("wordpress://themes/template-hierarchy")
+def get_template_hierarchy() -> str:
+    """WordPress Template Hierarchy - Template selection, conditional tags (CRITICAL)"""
+    return load_resource_content("themes", "template-hierarchy")
+
+
+# === BLOCK EDITOR (GUTENBERG) ===
+
+@mcp.resource("wordpress://blocks/block-registration")
+def get_block_registration() -> str:
+    """WordPress Block Registration - block.json, registerBlockType, attributes"""
+    return load_resource_content("blocks", "block-registration")
+
+
+# === REST API ===
+
+@mcp.resource("wordpress://rest-api/basics")
+def get_rest_api_basics() -> str:
+    """WordPress REST API Basics - Endpoints, authentication, responses"""
+    return load_resource_content("rest-api", "basics")
+
+
+# === ADDITIONAL CORE APIs ===
+
+@mcp.resource("wordpress://core/shortcode")
+def get_shortcode_api() -> str:
+    """WordPress Shortcode API - Creating secure shortcodes, attributes, nested shortcodes"""
+    return load_resource_content("core", "shortcode")
+
+
+@mcp.resource("wordpress://core/metadata")
+def get_metadata_api() -> str:
+    """WordPress Metadata API - Custom fields, meta boxes, meta queries"""
+    return load_resource_content("core", "metadata")
+
+
+@mcp.resource("wordpress://core/filesystem")
+def get_filesystem_api() -> str:
+    """WordPress Filesystem API - WP_Filesystem for secure file operations"""
+    return load_resource_content("core", "filesystem")
+
+
+# === BLOCK EDITOR COMPONENTS ===
+
+@mcp.resource("wordpress://blocks/components")
+def get_block_components() -> str:
+    """WordPress Block Editor Components - InspectorControls, BlockControls, form components"""
+    return load_resource_content("blocks", "components")
+
+
+# === THEME DEVELOPMENT EXPANSION ===
+
+@mcp.resource("wordpress://themes/template-tags")
+def get_template_tags() -> str:
+    """WordPress Template Tags - Loop functions, post data, navigation, taxonomies"""
+    return load_resource_content("themes", "template-tags")
