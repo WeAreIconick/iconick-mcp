@@ -389,3 +389,23 @@ def get_woocommerce_development() -> str:
 def get_performance_optimization() -> str:
     """WordPress Performance Optimization - Caching, database optimization, asset optimization"""
     return load_resource_content("advanced", "performance-optimization")
+
+
+# === WORDPRESS FRAMEWORKS RESOURCES ===
+
+@mcp.resource("wordpress://frameworks/timber-framework")
+def get_timber_framework() -> str:
+    """Timber Framework - Modern WordPress development with Twig templating"""
+    return load_resource_content("frameworks", "timber-framework")
+
+
+@mcp.resource("wordpress://frameworks/sage-framework")
+def get_sage_framework() -> str:
+    """Sage Framework - Modern WordPress development with Blade templating and Laravel components"""
+    return load_resource_content("frameworks", "sage-framework")
+
+
+@mcp.resource("wordpress://frameworks/underscores-framework")
+def get_underscores_framework() -> str:
+    """Underscores Framework - Official WordPress starter theme for professional theme development"""
+    return load_resource_content("frameworks", "underscores-framework")
