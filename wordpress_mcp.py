@@ -688,3 +688,31 @@ def get_ssl_security() -> str:
 def get_monitoring_logging() -> str:
     """WordPress Monitoring and Logging - Comprehensive monitoring, logging, and alerting strategies"""
     return load_resource_content("hosting", "monitoring-logging")
+
+
+# === WORDPRESS COMMUNITY AND ECOSYSTEM ===
+
+@mcp.resource("wordpress://ecosystem/wordpress-community")
+def get_wordpress_community() -> str:
+    """WordPress Community and Ecosystem - Comprehensive guide to the WordPress community, events, and contribution opportunities"""
+    return load_resource_content("ecosystem", "wordpress-community")
+
+@mcp.resource("wordpress://ecosystem/plugin-ecosystem")
+def get_plugin_ecosystem() -> str:
+    """WordPress Plugin Ecosystem - Complete guide to plugin development, marketplace, and business opportunities"""
+    return load_resource_content("ecosystem", "plugin-ecosystem")
+
+@mcp.resource("wordpress://ecosystem/theme-ecosystem")
+def get_theme_ecosystem() -> str:
+    """WordPress Theme Ecosystem - Comprehensive guide to theme development, marketplace, and design trends"""
+    return load_resource_content("ecosystem", "theme-ecosystem")
+
+@mcp.resource("wordpress://ecosystem/marketplace-resources")
+def get_marketplace_resources() -> str:
+    """WordPress Marketplace and Commercial Resources - Complete guide to commercial products, services, and business opportunities"""
+    return load_resource_content("ecosystem", "marketplace-resources")
+
+@mcp.resource("wordpress://ecosystem/industry-tools")
+def get_industry_tools() -> str:
+    """WordPress Industry Tools and Services - Comprehensive guide to development tools, services, and professional resources"""
+    return load_resource_content("ecosystem", "industry-tools")
