@@ -1,5 +1,5 @@
 from pathlib import Path
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, HTMLResponse
 from fastmcp import FastMCP
@@ -12,22 +12,19 @@ STATIC_DIR.mkdir(exist_ok=True)
 # Import our existing MCP server
 from wordpress_mcp import mcp
 
-# Create MCP ASGI app
-mcp_app = mcp.http_app(path='/mcp')
-
-# Create main FastAPI application
+# Create main FastAPI application with MCP integration
 app = FastAPI(
     title="WordPress Development MCP Server",
     description="Comprehensive WordPress development resources via Model Context Protocol",
-    version="2.0.0",
-    lifespan=mcp_app.lifespan
+    version="2.0.0"
 )
-
-# Mount MCP endpoint
-app.mount("/mcp", mcp_app)
 
 # Mount static files
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
+
+# Export the MCP server for FastMCP Cloud to use
+# This is what FastMCP Cloud expects to find
+mcp_server = mcp
 
 # Serve homepage
 @app.get("/", response_class=HTMLResponse)
