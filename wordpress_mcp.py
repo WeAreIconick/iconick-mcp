@@ -1187,3 +1187,130 @@ def detect_anomalies():
 
 import os
 
+
+
+# === HOMEPAGE RESOURCE ===
+
+@mcp.resource("data://homepage")
+def get_homepage() -> str:
+    """WordPress MCP Server Homepage - Landing page with server information and resource overview"""
+    homepage_path = Path(__file__).parent / "index.html"
+    if homepage_path.exists():
+        with open(homepage_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    else:
+        # Fallback homepage if index.html is not found
+        return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress Development MCP Server</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            margin: 2em; 
+            line-height: 1.6; 
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2em;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 { color: #2c3e50; text-align: center; margin-bottom: 1em; }
+        h2 { color: #34495e; margin-top: 2em; }
+        p { margin-bottom: 1em; }
+        .highlight { background: #f8f9fa; padding: 1em; border-left: 4px solid #007cba; margin: 1em 0; }
+        .resource-count { font-size: 1.2em; font-weight: bold; color: #007cba; }
+        ul { margin-left: 2em; }
+        a { color: #007cba; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚀 WordPress Development MCP Server</h1>
+        
+        <div class="highlight">
+            <p><strong>Welcome to the most comprehensive WordPress development resource hub!</strong></p>
+            <p>This Model Context Protocol (MCP) server provides AI assistants with extensive WordPress development documentation, coding standards, best practices, and code examples.</p>
+        </div>
+
+        <h2>📊 Server Statistics</h2>
+        <p><span class="resource-count">68 WordPress Resources</span> across 17 comprehensive categories</p>
+        <p><strong>Server Version:</strong> 1.17.0</p>
+        <p><strong>Protocol:</strong> MCP 2024-11-05</p>
+        <p><strong>Status:</strong> Production Ready ✅</p>
+
+        <h2>🎯 What's Available</h2>
+        <ul>
+            <li><strong>Core APIs:</strong> Database, HTTP, Options, Transients, Rewrite, Settings, Shortcode, Metadata, Filesystem</li>
+            <li><strong>Security & Best Practices:</strong> Data validation, sanitization, escaping, nonces, capabilities</li>
+            <li><strong>Theme Development:</strong> Template hierarchy, block themes, child themes, navigation</li>
+            <li><strong>Block Editor:</strong> Block registration, components, dynamic blocks, patterns</li>
+            <li><strong>REST API:</strong> Endpoints, authentication, schema, extensions</li>
+            <li><strong>Coding Standards:</strong> PHP, JavaScript, CSS, HTML, SQL, accessibility</li>
+            <li><strong>Development Tools:</strong> WP_DEBUG, Query Monitor, WP-CLI</li>
+            <li><strong>Advanced Topics:</strong> Multisite, WooCommerce, performance optimization</li>
+            <li><strong>WordPress Frameworks:</strong> Timber, Sage, Underscores</li>
+            <li><strong>Testing & QA:</strong> WordPress testing, PHPUnit, quality assurance</li>
+            <li><strong>Hosting & Deployment:</strong> Hosting providers, deployment strategies, server configuration</li>
+            <li><strong>Community & Ecosystem:</strong> WordPress community, plugin ecosystem, theme ecosystem</li>
+        </ul>
+
+        <h2>🔧 How to Use</h2>
+        <p>This MCP server is designed for AI assistants like Claude and Cursor. To access resources:</p>
+        <ul>
+            <li>Use MCP-compatible clients to connect to this server</li>
+            <li>Request specific resources by URI (e.g., <code>wordpress://core/database</code>)</li>
+            <li>Browse available resources using the MCP protocol</li>
+        </ul>
+
+        <h2>📚 Resource Categories</h2>
+        <p>All resources follow the <code>wordpress://{category}/{topic}</code> URI pattern:</p>
+        <ul>
+            <li><code>wordpress://core/*</code> - WordPress core APIs</li>
+            <li><code>wordpress://security/*</code> - Security best practices</li>
+            <li><code>wordpress://themes/*</code> - Theme development</li>
+            <li><code>wordpress://blocks/*</code> - Block editor development</li>
+            <li><code>wordpress://rest-api/*</code> - REST API development</li>
+            <li><code>wordpress://standards/*</code> - Coding standards</li>
+            <li><code>wordpress://tools/*</code> - Development tools</li>
+            <li><code>wordpress://advanced/*</code> - Advanced topics</li>
+            <li><code>wordpress://frameworks/*</code> - WordPress frameworks</li>
+            <li><code>wordpress://testing/*</code> - Testing and QA</li>
+            <li><code>wordpress://hosting/*</code> - Hosting and deployment</li>
+            <li><code>wordpress://ecosystem/*</code> - Community and ecosystem</li>
+            <li><code>wordpress://system/*</code> - System resources</li>
+        </ul>
+
+        <h2>🚀 Getting Started</h2>
+        <div class="highlight">
+            <p><strong>For AI Assistants:</strong></p>
+            <ul>
+                <li>Connect to this MCP server using your client's configuration</li>
+                <li>Request the <code>wordpress://system/resource-index</code> resource for a complete overview</li>
+                <li>Use specific resource URIs for targeted information</li>
+                <li>Cache frequently accessed resources for better performance</li>
+            </ul>
+        </div>
+
+        <h2>📞 Support & Updates</h2>
+        <p>This server is automatically maintained and updated with the latest WordPress development best practices. All resources are based on official WordPress documentation and community standards.</p>
+        
+        <p style="text-align: center; margin-top: 2em; color: #666;">
+            <strong>WordPress Development MCP Server</strong><br>
+            Powered by FastMCP • Built for AI Assistants
+        </p>
+    </div>
+</body>
+</html>
+        """
+
