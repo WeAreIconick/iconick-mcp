@@ -221,3 +221,25 @@ def get_block_components() -> str:
 def get_template_tags() -> str:
     """WordPress Template Tags - Loop functions, post data, navigation, taxonomies"""
     return load_resource_content("themes", "template-tags")
+
+
+# === ADDITIONAL BLOCK EDITOR RESOURCES ===
+
+@mcp.resource("wordpress://blocks/dynamic-blocks")
+def get_dynamic_blocks() -> str:
+    """WordPress Dynamic Blocks - Server-side rendering, AJAX, caching, forms"""
+    return load_resource_content("blocks", "dynamic-blocks")
+
+
+@mcp.resource("wordpress://blocks/block-patterns")
+def get_block_patterns() -> str:
+    """WordPress Block Patterns - Pattern registration, categories, complex layouts"""
+    return load_resource_content("blocks", "block-patterns")
+
+
+# === ADDITIONAL REST API RESOURCES ===
+
+@mcp.resource("wordpress://rest-api/custom-endpoints")
+def get_custom_endpoints() -> str:
+    """WordPress REST API Custom Endpoints - CRUD operations, permissions, schema"""
+    return load_resource_content("rest-api", "custom-endpoints")
