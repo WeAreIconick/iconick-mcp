@@ -409,3 +409,23 @@ def get_sage_framework() -> str:
 def get_underscores_framework() -> str:
     """Underscores Framework - Official WordPress starter theme for professional theme development"""
     return load_resource_content("frameworks", "underscores-framework")
+
+
+# === TESTING AND QUALITY ASSURANCE RESOURCES ===
+
+@mcp.resource("wordpress://testing/wordpress-testing")
+def get_wordpress_testing() -> str:
+    """WordPress Testing - Comprehensive testing for plugins, themes, and applications"""
+    return load_resource_content("testing", "wordpress-testing")
+
+
+@mcp.resource("wordpress://testing/phpunit-testing")
+def get_phpunit_testing() -> str:
+    """PHPUnit Testing - Advanced testing techniques and best practices for WordPress"""
+    return load_resource_content("testing", "phpunit-testing")
+
+
+@mcp.resource("wordpress://testing/quality-assurance")
+def get_quality_assurance() -> str:
+    """Quality Assurance - Code quality tools, security testing, and automated workflows"""
+    return load_resource_content("testing", "quality-assurance")
