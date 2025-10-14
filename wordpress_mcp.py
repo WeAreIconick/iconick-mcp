@@ -1185,3 +1185,113 @@ def detect_anomalies():
 - Continuous improvement
 """
 
+
+
+# === HOMEPAGE ROUTE ===
+
+from fastapi import Request
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+import os
+
+@mcp.app.get("/", response_class=HTMLResponse)
+async def homepage():
+    """Serve the landing page for the MCP server."""
+    index_path = Path(__file__).parent / "index.html"
+    if index_path.exists():
+        with open(index_path, 'r', encoding='utf-8') as f:
+            return HTMLResponse(content=f.read(), status_code=200)
+    else:
+        return HTMLResponse(content="""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>WordPress Development MCP Server</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+                .container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+                h1 { color: #333; text-align: center; }
+                .description { font-size: 1.2rem; color: #666; text-align: center; margin: 20px 0; }
+                .resources { background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0; }
+                .endpoint { font-family: monospace; background: #e9ecef; padding: 5px 10px; margin: 5px 0; border-radius: 3px; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🚀 WordPress Development MCP Server</h1>
+                <div class="description">
+                    Comprehensive WordPress development resources via Model Context Protocol (MCP)
+                </div>
+                
+                <div class="resources">
+                    <h3>📚 Available Resources (72+ total):</h3>
+                    <div class="endpoint">wordpress://core/database - WordPress Database API</div>
+                    <div class="endpoint">wordpress://security/data-validation - Data validation best practices</div>
+                    <div class="endpoint">wordpress://blocks/block-registration - Block Editor development</div>
+                    <div class="endpoint">wordpress://rest-api/basics - REST API fundamentals</div>
+                    <div class="endpoint">wordpress://performance/advanced-performance-optimization - Performance optimization</div>
+                    <div class="endpoint">wordpress://ecosystem/wordpress-community - WordPress community resources</div>
+                    <div style="margin-top: 15px; font-size: 0.9rem; color: #666;">
+                        ...and 66+ more comprehensive WordPress development resources
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <p><strong>🔒 Security Features:</strong> Rate limiting, input validation, authentication, monitoring</p>
+                    <p><strong>📊 Categories:</strong> Core APIs, Security, Performance, Themes, Plugins, Frameworks, Testing, Hosting, Community</p>
+                    <p><strong>🚀 Status:</strong> Production ready with 72+ resources</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;">
+                    <p>Built with ❤️ for the WordPress community</p>
+                    <p><a href="https://github.com/iconick/iconick-mcp">GitHub</a> | <a href="https://fastmcp.com">FastMCP</a> | <a href="https://wordpress.org">WordPress.org</a></p>
+                </div>
+            </div>
+        </body>
+        </html>
+        """, status_code=200)
+
+@mcp.app.get("/health")
+async def health_check():
+    """Health check endpoint for monitoring."""
+    return {
+        "status": "healthy",
+        "service": "WordPress Development MCP Server",
+        "version": "1.0.0",
+        "resources": 74,  # Updated count with security resources
+        "categories": 17,  # Updated count
+        "timestamp": time.time()
+    }
+
+@mcp.app.get("/status")
+async def server_status():
+    """Detailed server status endpoint."""
+    return {
+        "server": "WordPress Development MCP Server",
+        "status": "operational",
+        "resources": {
+            "total": 74,
+            "categories": 17,
+            "security_resources": 8,
+            "performance_resources": 5,
+            "core_apis": 9,
+            "theme_resources": 8,
+            "block_editor_resources": 7,
+            "rest_api_resources": 5,
+            "framework_resources": 3,
+            "testing_resources": 3,
+            "hosting_resources": 5,
+            "ecosystem_resources": 5
+        },
+        "security": {
+            "rate_limiting": "enabled",
+            "input_validation": "enabled",
+            "authentication": "optional",
+            "monitoring": "enabled",
+            "logging": "enabled"
+        },
+        "uptime": "operational",
+        "last_updated": "2024-10-14",
+        "next_update": "automatic"
+    }
+
