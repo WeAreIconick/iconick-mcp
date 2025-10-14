@@ -243,3 +243,31 @@ def get_block_patterns() -> str:
 def get_custom_endpoints() -> str:
     """WordPress REST API Custom Endpoints - CRUD operations, permissions, schema"""
     return load_resource_content("rest-api", "custom-endpoints")
+
+
+# === ADDITIONAL THEME DEVELOPMENT RESOURCES ===
+
+@mcp.resource("wordpress://themes/theme-json")
+def get_theme_json() -> str:
+    """WordPress theme.json - Block theme configuration, settings, styles"""
+    return load_resource_content("themes", "theme-json")
+
+
+# === DEVELOPMENT TOOLS RESOURCES ===
+
+@mcp.resource("wordpress://tools/wp-debug")
+def get_wp_debug() -> str:
+    """WordPress Debug System - Debug constants, logging, error handling"""
+    return load_resource_content("tools", "wp-debug")
+
+
+@mcp.resource("wordpress://tools/query-monitor")
+def get_query_monitor() -> str:
+    """Query Monitor Plugin - Database queries, hooks, performance analysis"""
+    return load_resource_content("tools", "query-monitor")
+
+
+@mcp.resource("wordpress://tools/wp-cli")
+def get_wp_cli() -> str:
+    """WordPress CLI (WP-CLI) - Command-line interface, automation, management"""
+    return load_resource_content("tools", "wp-cli")
