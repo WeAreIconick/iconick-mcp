@@ -1,0 +1,21 @@
+# Development and update script dependencies
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# Code quality
+black>=24.0.0
+ruff>=0.1.0
+mypy>=1.7.0
+
+# Security scanning
+bandit>=1.7.0
+safety>=3.0.0
+
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.12.0
+
+# Pre-commit hooks
+pre-commit>=3.5.0
