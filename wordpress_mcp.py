@@ -1,8 +1,10 @@
 
+"""
 WordPress Development MCP Server - Expanded Edition
 
 Provides comprehensive WordPress development resources including documentation,
 coding standards, best practices, and code examples through the MCP protocol.
+"""
 
 from pathlib import Path
 import logging
