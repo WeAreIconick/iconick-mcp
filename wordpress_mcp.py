@@ -4,7 +4,6 @@ WordPress Development MCP Server - Expanded Edition
 Provides comprehensive WordPress development resources including documentation,
 coding standards, best practices, and code examples through the MCP protocol.
 
-
 from pathlib import Path
 import logging
 
@@ -16,7 +15,6 @@ logger = logging.getLogger(__name__)
 mcp = FastMCP("WordPress Development Resources")
 RESOURCES_DIR = Path(__file__).parent / "resources"
 
-
 def load_resource_content(category: str, topic: str) -> str:
     """Load resource content from markdown files."""
     resource_path = RESOURCES_DIR / category / f"{topic}.md"
@@ -25,136 +23,93 @@ def load_resource_content(category: str, topic: str) -> str:
     with open(resource_path, 'r', encoding='utf-8') as f:
         return f.read()
 
-
 # === CORE WORDPRESS APIs ===
 
 @mcp.resource("wordpress://core/database")
 def get_database_api() -> str:
     """WordPress Database API (wpdb) - Queries, prepared statements, custom tables"""
     return load_resource_content("core", "database")
-
-
 @mcp.resource("wordpress://core/http")
 def get_http_api() -> str:
     """WordPress HTTP API - wp_remote_get/post, handling responses"""
     return load_resource_content("core", "http")
-
-
 @mcp.resource("wordpress://core/options")
 def get_options_api() -> str:
     """WordPress Options API - get_option, update_option, autoload"""
     return load_resource_content("core", "options")
-
-
 @mcp.resource("wordpress://core/transients")
 def get_transients_api() -> str:
     """WordPress Transients API - Caching with TTL, object cache integration"""
     return load_resource_content("core", "transients")
-
-
 @mcp.resource("wordpress://core/rewrite")
 def get_rewrite_api() -> str:
     """WordPress Rewrite API - Custom URLs, query vars, permalinks"""
     return load_resource_content("core", "rewrite")
-
-
 @mcp.resource("wordpress://core/settings")
 def get_settings_api() -> str:
     """WordPress Settings API - register_setting, settings sections"""
     return load_resource_content("core", "settings")
-
-
 # === THEME DEVELOPMENT ===
 
 @mcp.resource("wordpress://themes/template-hierarchy")
 def get_template_hierarchy() -> str:
     """WordPress Template Hierarchy - Template selection, conditional tags (CRITICAL)"""
     return load_resource_content("themes", "template-hierarchy")
-
-
 # === SECURITY BEST PRACTICES ===
 
 @mcp.resource("wordpress://security/data-validation")
 def get_data_validation() -> str:
     """WordPress Data Validation - Validating all input data"""
     return load_resource_content("security", "data-validation")
-
-
 @mcp.resource("wordpress://security/sanitization")
 def get_sanitization() -> str:
     """WordPress Data Sanitization - sanitize_text_field and more"""
     return load_resource_content("security", "sanitization")
-
-
 @mcp.resource("wordpress://security/escaping")
 def get_escaping() -> str:
     """WordPress Output Escaping - esc_html, esc_attr, esc_url, esc_js"""
     return load_resource_content("security", "escaping")
-
-
 @mcp.resource("wordpress://security/nonces")
 def get_nonces() -> str:
     """WordPress Nonces - Creating, verifying, AJAX nonces"""
     return load_resource_content("security", "nonces")
-
-
 @mcp.resource("wordpress://security/capabilities")
 def get_capabilities() -> str:
     """WordPress Capabilities - current_user_can, role management"""
     return load_resource_content("security", "capabilities")
-
-
 @mcp.resource("wordpress://security/sql-injection")
 def get_sql_injection() -> str:
     """WordPress SQL Injection Prevention - Prepared statements, $wpdb->prepare"""
     return load_resource_content("security", "sql-injection")
-
-
 # === CODING STANDARDS ===
 
 @mcp.resource("wordpress://standards/php")
 def get_php_standards() -> str:
     """WordPress PHP Coding Standards - Formatting, naming conventions"""
     return load_resource_content("standards", "php")
-
-
 @mcp.resource("wordpress://standards/javascript")
 def get_javascript_standards() -> str:
     """WordPress JavaScript Coding Standards - ESLint configuration"""
     return load_resource_content("standards", "javascript")
-
-
 # === HOOKS & FILTERS ===
 
 @mcp.resource("wordpress://hooks/actions")
 def get_action_hooks() -> str:
     """WordPress Action Hooks - Common actions with examples"""
     return load_resource_content("hooks", "actions")
-
-
 # === PLUGINS ===
 
 @mcp.resource("wordpress://plugins/structure")
 def get_plugin_structure() -> str:
     """WordPress Plugin Structure - File organization, naming conventions"""
     return load_resource_content("plugins", "structure")
-
-
 # === EXAMPLES ===
 
 @mcp.resource("wordpress://examples/custom-post-types")
 def get_cpt_examples() -> str:
     """WordPress Custom Post Types - Complete examples"""
     return load_resource_content("examples", "custom-post-types")
-
-
-    
-    # List all available resources
-
-
 # === THEME DEVELOPMENT ===
-
-
 
 # === BLOCK EDITOR (GUTENBERG) ===
 
@@ -162,260 +117,184 @@ def get_cpt_examples() -> str:
 def get_block_registration() -> str:
     """WordPress Block Registration - block.json, registerBlockType, attributes"""
     return load_resource_content("blocks", "block-registration")
-
-
 # === REST API ===
 
 @mcp.resource("wordpress://rest-api/basics")
 def get_rest_api_basics() -> str:
     """WordPress REST API Basics - Endpoints, authentication, responses"""
     return load_resource_content("rest-api", "basics")
-
-
 # === ADDITIONAL CORE APIs ===
 
 @mcp.resource("wordpress://core/shortcode")
 def get_shortcode_api() -> str:
     """WordPress Shortcode API - Creating secure shortcodes, attributes, nested shortcodes"""
     return load_resource_content("core", "shortcode")
-
-
 @mcp.resource("wordpress://core/metadata")
 def get_metadata_api() -> str:
     """WordPress Metadata API - Custom fields, meta boxes, meta queries"""
     return load_resource_content("core", "metadata")
-
-
 @mcp.resource("wordpress://core/filesystem")
 def get_filesystem_api() -> str:
     """WordPress Filesystem API - WP_Filesystem for secure file operations"""
     return load_resource_content("core", "filesystem")
-
-
 # === BLOCK EDITOR COMPONENTS ===
 
 @mcp.resource("wordpress://blocks/components")
 def get_block_components() -> str:
     """WordPress Block Editor Components - InspectorControls, BlockControls, form components"""
     return load_resource_content("blocks", "components")
-
-
 # === THEME DEVELOPMENT EXPANSION ===
 
 @mcp.resource("wordpress://themes/template-tags")
 def get_template_tags() -> str:
     """WordPress Template Tags - Loop functions, post data, navigation, taxonomies"""
     return load_resource_content("themes", "template-tags")
-
-
 # === ADDITIONAL BLOCK EDITOR RESOURCES ===
 
 @mcp.resource("wordpress://blocks/dynamic-blocks")
 def get_dynamic_blocks() -> str:
     """WordPress Dynamic Blocks - Server-side rendering, AJAX, caching, forms"""
     return load_resource_content("blocks", "dynamic-blocks")
-
-
 @mcp.resource("wordpress://blocks/block-patterns")
 def get_block_patterns() -> str:
     """WordPress Block Patterns - Pattern registration, categories, complex layouts"""
     return load_resource_content("blocks", "block-patterns")
-
-
 # === ADDITIONAL REST API RESOURCES ===
 
 @mcp.resource("wordpress://rest-api/custom-endpoints")
 def get_custom_endpoints() -> str:
     """WordPress REST API Custom Endpoints - CRUD operations, permissions, schema"""
     return load_resource_content("rest-api", "custom-endpoints")
-
-
 # === ADDITIONAL THEME DEVELOPMENT RESOURCES ===
 
 @mcp.resource("wordpress://themes/theme-json")
 def get_theme_json() -> str:
     """WordPress theme.json - Block theme configuration, settings, styles"""
     return load_resource_content("themes", "theme-json")
-
-
 # === DEVELOPMENT TOOLS RESOURCES ===
 
 @mcp.resource("wordpress://tools/wp-debug")
 def get_wp_debug() -> str:
     """WordPress Debug System - Debug constants, logging, error handling"""
     return load_resource_content("tools", "wp-debug")
-
-
 @mcp.resource("wordpress://tools/query-monitor")
 def get_query_monitor() -> str:
     """Query Monitor Plugin - Database queries, hooks, performance analysis"""
     return load_resource_content("tools", "query-monitor")
-
-
 @mcp.resource("wordpress://tools/wp-cli")
 def get_wp_cli() -> str:
     """WordPress CLI (WP-CLI) - Command-line interface, automation, management"""
     return load_resource_content("tools", "wp-cli")
-
-
 # === COMPLETE BLOCK EDITOR RESOURCES ===
 
 @mcp.resource("wordpress://blocks/innerblocks")
 def get_innerblocks() -> str:
     """WordPress InnerBlocks - Nested block structures, complex layouts"""
     return load_resource_content("blocks", "innerblocks")
-
-
 @mcp.resource("wordpress://blocks/block-transforms")
 def get_block_transforms() -> str:
     """WordPress Block Transforms - Converting between block types, migration"""
     return load_resource_content("blocks", "block-transforms")
-
-
 @mcp.resource("wordpress://blocks/wordpress-packages")
 def get_wordpress_packages() -> str:
     """WordPress @wordpress packages - Components, data, i18n, utilities"""
     return load_resource_content("blocks", "wordpress-packages")
-
-
 # === ADDITIONAL REST API RESOURCES ===
 
 @mcp.resource("wordpress://rest-api/authentication")
 def get_rest_authentication() -> str:
     """WordPress REST API Authentication - Application passwords, OAuth, JWT, nonces"""
     return load_resource_content("rest-api", "authentication")
-
-
 @mcp.resource("wordpress://rest-api/schema")
 def get_rest_schema() -> str:
     """WordPress REST API Schema - Schema definition, validation, documentation"""
     return load_resource_content("rest-api", "schema")
-
-
 @mcp.resource("wordpress://rest-api/extensions")
 def get_rest_extensions() -> str:
     """WordPress REST API Extensions - Endpoint modifications, custom fields, bulk operations"""
     return load_resource_content("rest-api", "extensions")
-
-
 # === ADDITIONAL THEME DEVELOPMENT RESOURCES ===
 
 @mcp.resource("wordpress://themes/block-themes")
 def get_block_themes() -> str:
     """WordPress Block Themes - Modern theme development with HTML templates and block patterns"""
     return load_resource_content("themes", "block-themes")
-
-
 @mcp.resource("wordpress://themes/child-themes")
 def get_child_themes() -> str:
     """WordPress Child Themes - Extending existing themes without losing customizations"""
     return load_resource_content("themes", "child-themes")
-
-
 @mcp.resource("wordpress://themes/navigation-menus")
 def get_navigation_menus() -> str:
     """WordPress Navigation Menus - Creating and customizing site navigation"""
     return load_resource_content("themes", "navigation-menus")
-
-
 @mcp.resource("wordpress://themes/sidebars-widgets")
 def get_sidebars_widgets() -> str:
     """WordPress Sidebars & Widgets - Creating flexible content areas and custom widgets"""
     return load_resource_content("themes", "sidebars-widgets")
-
-
 @mcp.resource("wordpress://themes/post-thumbnails")
 def get_post_thumbnails() -> str:
     """WordPress Post Thumbnails - Featured images, custom sizes, and optimization"""
     return load_resource_content("themes", "post-thumbnails")
-
-
 # === ADDITIONAL CODING STANDARDS RESOURCES ===
 
 @mcp.resource("wordpress://standards/css-coding-standards")
 def get_css_coding_standards() -> str:
     """WordPress CSS Coding Standards - Formatting, BEM methodology, responsive design"""
     return load_resource_content("standards", "css-coding-standards")
-
-
 @mcp.resource("wordpress://standards/html-coding-standards")
 def get_html_coding_standards() -> str:
     """WordPress HTML Coding Standards - Semantic markup, accessibility, security"""
     return load_resource_content("standards", "html-coding-standards")
-
-
 @mcp.resource("wordpress://standards/sql-best-practices")
 def get_sql_best_practices() -> str:
     """WordPress SQL Best Practices - Prepared statements, security, optimization"""
     return load_resource_content("standards", "sql-best-practices")
-
-
 @mcp.resource("wordpress://standards/accessibility-standards")
 def get_accessibility_standards() -> str:
     """WordPress Accessibility Standards - WCAG 2.1 AA compliance, ARIA, testing"""
     return load_resource_content("standards", "accessibility-standards")
-
-
 # === ADVANCED TOPICS RESOURCES ===
 
 @mcp.resource("wordpress://advanced/multisite-development")
 def get_multisite_development() -> str:
     """WordPress Multisite Development - Network management, site switching, user management"""
     return load_resource_content("advanced", "multisite-development")
-
-
 @mcp.resource("wordpress://advanced/woocommerce-development")
 def get_woocommerce_development() -> str:
     """WooCommerce Development - E-commerce functionality, payment gateways, product management"""
     return load_resource_content("advanced", "woocommerce-development")
-
-
 @mcp.resource("wordpress://advanced/performance-optimization")
 def get_performance_optimization() -> str:
     """WordPress Performance Optimization - Caching, database optimization, asset optimization"""
     return load_resource_content("advanced", "performance-optimization")
-
-
 # === WORDPRESS FRAMEWORKS RESOURCES ===
 
 @mcp.resource("wordpress://frameworks/timber-framework")
 def get_timber_framework() -> str:
     """Timber Framework - Modern WordPress development with Twig templating"""
     return load_resource_content("frameworks", "timber-framework")
-
-
 @mcp.resource("wordpress://frameworks/sage-framework")
 def get_sage_framework() -> str:
     """Sage Framework - Modern WordPress development with Blade templating and Laravel components"""
     return load_resource_content("frameworks", "sage-framework")
-
-
 @mcp.resource("wordpress://frameworks/underscores-framework")
 def get_underscores_framework() -> str:
     """Underscores Framework - Official WordPress starter theme for professional theme development"""
     return load_resource_content("frameworks", "underscores-framework")
-
-
 # === TESTING AND QUALITY ASSURANCE RESOURCES ===
 
 @mcp.resource("wordpress://testing/wordpress-testing")
 def get_wordpress_testing() -> str:
     """WordPress Testing - Comprehensive testing for plugins, themes, and applications"""
     return load_resource_content("testing", "wordpress-testing")
-
-
 @mcp.resource("wordpress://testing/phpunit-testing")
 def get_phpunit_testing() -> str:
     """PHPUnit Testing - Advanced testing techniques and best practices for WordPress"""
     return load_resource_content("testing", "phpunit-testing")
-
-
 @mcp.resource("wordpress://testing/quality-assurance")
 def get_quality_assurance() -> str:
     """Quality Assurance - Code quality tools, security testing, and automated workflows"""
     return load_resource_content("testing", "quality-assurance")
-
-
 # === MCP TOOLS IMPLEMENTATION ===
 
 @mcp.tool()
@@ -460,7 +339,6 @@ def wordpress_installer(target_dir: str, version: str = "latest", site_url: str 
     except Exception as e:
         return f"Error running WordPress installer: {str(e)}"
 
-
 @mcp.tool()
 def plugin_manager(wp_path: str, action: str, plugin: str = None, plugins: list = None, 
                   activate: bool = False, status: str = "all", limit: int = 10, 
@@ -499,7 +377,6 @@ def plugin_manager(wp_path: str, action: str, plugin: str = None, plugins: list 
             
     except Exception as e:
         return f"Error running plugin manager: {str(e)}"
-
 
 @mcp.tool()
 def theme_customizer(wp_path: str, action: str, theme: str = None, themes: list = None,
@@ -557,7 +434,6 @@ def theme_customizer(wp_path: str, action: str, theme: str = None, themes: list 
     except Exception as e:
         return f"Error running theme customizer: {str(e)}"
 
-
 @mcp.tool()
 def database_manager(wp_path: str, action: str, table: str = None, output: str = None,
                     backup: str = None, compress: bool = False, search: str = None,
@@ -604,7 +480,6 @@ def database_manager(wp_path: str, action: str, table: str = None, output: str =
     except Exception as e:
         return f"Error running database manager: {str(e)}"
 
-
 @mcp.tool()
 def backup_tool(wp_path: str, action: str, output: str = None, backup: str = None,
                target: str = None, directory: str = None, compress: bool = False) -> str:
@@ -646,63 +521,50 @@ def backup_tool(wp_path: str, action: str, output: str = None, backup: str = Non
     except Exception as e:
         return f"Error running backup tool: {str(e)}"
 
-
 # === WORDPRESS HOSTING AND DEPLOYMENT ===
 
 @mcp.resource("wordpress://hosting/wordpress-hosting-providers")
 def get_wordpress_hosting_providers() -> str:
     """WordPress Hosting Providers - Comprehensive guide to hosting options, features, and selection criteria"""
     return load_resource_content("hosting", "wordpress-hosting-providers")
-
 @mcp.resource("wordpress://hosting/deployment-strategies")
 def get_deployment_strategies() -> str:
     """WordPress Deployment Strategies - Modern deployment methodologies, tools, and best practices"""
     return load_resource_content("hosting", "deployment-strategies")
-
 @mcp.resource("wordpress://hosting/server-configuration")
 def get_server_configuration() -> str:
     """WordPress Server Configuration - Web server, PHP, database, and infrastructure optimization"""
     return load_resource_content("hosting", "server-configuration")
-
 @mcp.resource("wordpress://hosting/ssl-security")
 def get_ssl_security() -> str:
     """WordPress SSL and Security Configuration - SSL/TLS setup, security headers, and hardening"""
     return load_resource_content("hosting", "ssl-security")
-
 @mcp.resource("wordpress://hosting/monitoring-logging")
 def get_monitoring_logging() -> str:
     """WordPress Monitoring and Logging - Comprehensive monitoring, logging, and alerting strategies"""
     return load_resource_content("hosting", "monitoring-logging")
-
-
 # === WORDPRESS COMMUNITY AND ECOSYSTEM ===
 
 @mcp.resource("wordpress://ecosystem/wordpress-community")
 def get_wordpress_community() -> str:
     """WordPress Community and Ecosystem - Comprehensive guide to the WordPress community, events, and contribution opportunities"""
     return load_resource_content("ecosystem", "wordpress-community")
-
 @mcp.resource("wordpress://ecosystem/plugin-ecosystem")
 def get_plugin_ecosystem() -> str:
     """WordPress Plugin Ecosystem - Complete guide to plugin development, marketplace, and business opportunities"""
     return load_resource_content("ecosystem", "plugin-ecosystem")
-
 @mcp.resource("wordpress://ecosystem/theme-ecosystem")
 def get_theme_ecosystem() -> str:
     """WordPress Theme Ecosystem - Comprehensive guide to theme development, marketplace, and design trends"""
     return load_resource_content("ecosystem", "theme-ecosystem")
-
 @mcp.resource("wordpress://ecosystem/marketplace-resources")
 def get_marketplace_resources() -> str:
     """WordPress Marketplace and Commercial Resources - Complete guide to commercial products, services, and business opportunities"""
     return load_resource_content("ecosystem", "marketplace-resources")
-
 @mcp.resource("wordpress://ecosystem/industry-tools")
 def get_industry_tools() -> str:
     """WordPress Industry Tools and Services - Comprehensive guide to development tools, services, and professional resources"""
     return load_resource_content("ecosystem", "industry-tools")
-
-
 # === MCP SERVER SECURITY ===
 
 import time
@@ -862,148 +724,11 @@ def secure_mcp_resource(rate_limit: int = 100, require_auth: bool = False):
 def get_mcp_server_security() -> str:
     """MCP Server Security - Authentication, rate limiting, input validation, and security best practices"""
     return load_resource_content("security", "mcp-server-security")
-
 @mcp.resource("wordpress://security/security-monitoring")
 @secure_mcp_resource(rate_limit=30, require_auth=False)
 def get_security_monitoring() -> str:
     """Security Monitoring and Alerting - Real-time security monitoring, logging, and incident response"""
     return load_resource_content("security", "security-monitoring")
-
-
-
-# === HOMEPAGE ROUTE ===
-
-import os
-
-
-
-# === HOMEPAGE RESOURCE ===
-
-@mcp.resource("data://homepage")
-def get_homepage() -> str:
-    """WordPress MCP Server Homepage - Landing page with server information and resource overview"""
-    homepage_path = Path(__file__).parent / "index.html"
-    if homepage_path.exists():
-        with open(homepage_path, 'r', encoding='utf-8') as f:
-            return f.read()
-    else:
-        # Fallback homepage if index.html is not found
-        return """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WordPress Development MCP Server</title>
-    <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            margin: 2em; 
-            line-height: 1.6; 
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 2em;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        h1 { color: #2c3e50; text-align: center; margin-bottom: 1em; }
-        h2 { color: #34495e; margin-top: 2em; }
-        p { margin-bottom: 1em; }
-        .highlight { background: #f8f9fa; padding: 1em; border-left: 4px solid #007cba; margin: 1em 0; }
-        .resource-count { font-size: 1.2em; font-weight: bold; color: #007cba; }
-        ul { margin-left: 2em; }
-        a { color: #007cba; text-decoration: none; }
-        a:hover { text-decoration: underline; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>🚀 WordPress Development MCP Server</h1>
-        
-        <div class="highlight">
-            <p><strong>Welcome to the most comprehensive WordPress development resource hub!</strong></p>
-            <p>This Model Context Protocol (MCP) server provides AI assistants with extensive WordPress development documentation, coding standards, best practices, and code examples.</p>
-        </div>
-
-        <h2>📊 Server Statistics</h2>
-        <p><span class="resource-count">68 WordPress Resources</span> across 17 comprehensive categories</p>
-        <p><strong>Server Version:</strong> 1.17.0</p>
-        <p><strong>Protocol:</strong> MCP 2024-11-05</p>
-        <p><strong>Status:</strong> Production Ready ✅</p>
-
-        <h2>🎯 What's Available</h2>
-        <ul>
-            <li><strong>Core APIs:</strong> Database, HTTP, Options, Transients, Rewrite, Settings, Shortcode, Metadata, Filesystem</li>
-            <li><strong>Security & Best Practices:</strong> Data validation, sanitization, escaping, nonces, capabilities</li>
-            <li><strong>Theme Development:</strong> Template hierarchy, block themes, child themes, navigation</li>
-            <li><strong>Block Editor:</strong> Block registration, components, dynamic blocks, patterns</li>
-            <li><strong>REST API:</strong> Endpoints, authentication, schema, extensions</li>
-            <li><strong>Coding Standards:</strong> PHP, JavaScript, CSS, HTML, SQL, accessibility</li>
-            <li><strong>Development Tools:</strong> WP_DEBUG, Query Monitor, WP-CLI</li>
-            <li><strong>Advanced Topics:</strong> Multisite, WooCommerce, performance optimization</li>
-            <li><strong>WordPress Frameworks:</strong> Timber, Sage, Underscores</li>
-            <li><strong>Testing & QA:</strong> WordPress testing, PHPUnit, quality assurance</li>
-            <li><strong>Hosting & Deployment:</strong> Hosting providers, deployment strategies, server configuration</li>
-            <li><strong>Community & Ecosystem:</strong> WordPress community, plugin ecosystem, theme ecosystem</li>
-        </ul>
-
-        <h2>🔧 How to Use</h2>
-        <p>This MCP server is designed for AI assistants like Claude and Cursor. To access resources:</p>
-        <ul>
-            <li>Use MCP-compatible clients to connect to this server</li>
-            <li>Request specific resources by URI (e.g., <code>wordpress://core/database</code>)</li>
-            <li>Browse available resources using the MCP protocol</li>
-        </ul>
-
-        <h2>📚 Resource Categories</h2>
-        <p>All resources follow the <code>wordpress://{category}/{topic}</code> URI pattern:</p>
-        <ul>
-            <li><code>wordpress://core/*</code> - WordPress core APIs</li>
-            <li><code>wordpress://security/*</code> - Security best practices</li>
-            <li><code>wordpress://themes/*</code> - Theme development</li>
-            <li><code>wordpress://blocks/*</code> - Block editor development</li>
-            <li><code>wordpress://rest-api/*</code> - REST API development</li>
-            <li><code>wordpress://standards/*</code> - Coding standards</li>
-            <li><code>wordpress://tools/*</code> - Development tools</li>
-            <li><code>wordpress://advanced/*</code> - Advanced topics</li>
-            <li><code>wordpress://frameworks/*</code> - WordPress frameworks</li>
-            <li><code>wordpress://testing/*</code> - Testing and QA</li>
-            <li><code>wordpress://hosting/*</code> - Hosting and deployment</li>
-            <li><code>wordpress://ecosystem/*</code> - Community and ecosystem</li>
-            <li><code>wordpress://system/*</code> - System resources</li>
-        </ul>
-
-        <h2>🚀 Getting Started</h2>
-        <div class="highlight">
-            <p><strong>For AI Assistants:</strong></p>
-            <ul>
-                <li>Connect to this MCP server using your client's configuration</li>
-                <li>Request the <code>wordpress://system/resource-index</code> resource for a complete overview</li>
-                <li>Use specific resource URIs for targeted information</li>
-                <li>Cache frequently accessed resources for better performance</li>
-            </ul>
-        </div>
-
-        <h2>📞 Support & Updates</h2>
-        <p>This server is automatically maintained and updated with the latest WordPress development best practices. All resources are based on official WordPress documentation and community standards.</p>
-        
-        <p style="text-align: center; margin-top: 2em; color: #666;">
-            <strong>WordPress Development MCP Server</strong><br>
-            Powered by FastMCP • Built for AI Assistants
-        </p>
-    </div>
-</body>
-</html>
-        """
-
-
-
 # === ADDITIONAL WORDPRESS DEVELOPMENT RESOURCES ===
 
 # Custom Post Types and Fields
@@ -1012,185 +737,17 @@ def get_custom_post_types() -> str:
     """WordPress Custom Post Types - Registration, capabilities, templates, and advanced usage"""
     return load_resource_content("advanced", "custom-post-types")
 
-## Basic Registration
-
-    
-
-## Advanced Registration with Capabilities
-
-
-
-
-## Custom Fields and Meta Boxes
-
-
-    
-
-
-
-
-
-
-
-## Template Files
-
-### Single Template
-
-
-        
-        
-
-
-### Archive Template
-
-
-                    
-                        
-                        
-    
-
-
-## Query Custom Post Types
-
-
-
-## Custom Post Type with Custom Fields (Advanced)
-
-
-
-
-        
-
-
-
-        
-
-
-
-
-
-## Best Practices
-
-
-## Resources
-
-
 
 @mcp.resource("wordpress://advanced/meta-boxes")
 def get_meta_boxes() -> str:
     """WordPress Meta Boxes - Creating custom admin interfaces and data management"""
     return load_resource_content("advanced", "meta-boxes")
 
-## Basic Meta Box Creation
 
-
-    
-
-## Advanced Meta Box with Multiple Fields
-
-
-
-
-        
-        
-
-
-
-
-
-
-
-
-
-
-
-
-        
-                
-                
-
-
-## Conditional Meta Boxes
-
-
-        
-
-## Meta Box with AJAX
-
-
-
-            
-                    
-
-        
-        
-
-
-
-
-## Best Practices
-
-
-## Resources
-
-
-
-
-# WordPress Taxonomies and Terms
 @mcp.resource("wordpress://advanced/taxonomies")
 def get_taxonomies() -> str:
     """WordPress Taxonomies - Custom taxonomies, terms, and hierarchical organization"""
     return load_resource_content("advanced", "taxonomies")
-
-## Basic Custom Taxonomy Registration
-
-
-
-
-## Non-Hierarchical Taxonomy (Tags)
-
-
-
-
-## Advanced Taxonomy with Meta Fields
-
-
-
-
-
-
-
-
-
-        
-        
-
-
-## Query Posts by Taxonomy
-
-
-
-
-
-
-
-
-## Taxonomy Templates
-
-### Taxonomy Archive Template
-
-
-            
-            
-
-                    
-
-
-## Best Practices
-
-
-## Resources
-
 
 
 @mcp.resource("wordpress://advanced/wordpress-hooks")
@@ -1198,169 +755,11 @@ def get_wordpress_hooks() -> str:
     """WordPress Hooks System - Actions, filters, and custom hook development"""
     return load_resource_content("advanced", "wordpress-hooks")
 
-## Understanding WordPress Hooks
 
-
-
-## Common Action Hooks
-
-### Post Actions
-    
-
-
-    
-    
-
-### User Actions
-    
-
-
-
-### Admin Actions
-
-
-
-## Common Filter Hooks
-
-### Content Filters
-
-
-
-
-### Query Filters
-
-    
-
-
-## Custom Hooks
-
-### Creating Custom Actions
-    
-    
-
-
-
-### Creating Custom Filters
-    
-
-
-
-## Hook Priority and Arguments
-
-### Priority System
-
-### Multiple Arguments
-
-
-## Advanced Hook Usage
-
-### Conditional Hooks
-
-
-### Hook Removal
-
-
-
-
-## Best Practices
-
-
-## Resources
-
-
-
-
-# WordPress AJAX Development
 @mcp.resource("wordpress://advanced/ajax-development")
 def get_ajax_development() -> str:
     """WordPress AJAX Development - Frontend and admin AJAX, security, and best practices"""
     return load_resource_content("advanced", "ajax-development")
-
-## Admin AJAX
-
-### Basic Admin AJAX Setup
-
-    
-    
-    
-
-### Admin AJAX with Nonce Security
-
-        
-
-
-
-        
-
-        
-
-
-
-### Frontend AJAX with JavaScript
-    
-
-
-    
-    
-            
-            
-
-### JavaScript AJAX Implementation
-        
-        
-        
-
-## Advanced AJAX Patterns
-
-### AJAX with REST API
-
-    
-
-### AJAX with File Upload
-    
-    
-    
-    
-    
-    
-    
-
-### AJAX with Database Operations
-    
-    
-    
-            
-            
-            
-            
-            
-            
-            
-            
-            
-
-## AJAX Security Best Practices
-
-### Input Validation and Sanitization
-    
-    
-        
-        
-        
-        
-
-### Rate Limiting for AJAX
-    
-        
-        
-        
-        
-
-## Best Practices
-
-
-## Resources
-
 
 
 @mcp.resource("wordpress://advanced/wordpress-cron")
@@ -1368,195 +767,11 @@ def get_wordpress_cron() -> str:
     """WordPress Cron System - Scheduled tasks, wp-cron, and background processing"""
     return load_resource_content("advanced", "wordpress-cron")
 
-## Understanding WordPress Cron
 
-
-## Basic Cron Jobs
-
-### Scheduling a Single Event
-
-
-### Recurring Events
-
-
-
-## Custom Cron Intervals
-
-    
-    
-    
-
-
-## Advanced Cron Management
-
-### Cron Job Manager Class
-    
-    
-    
-    
-        
-        
-        
-
-
-### Database Backup Cron Job
-    
-    
-    
-    
-    
-    
-        
-
-    
-
-## Cron with Background Processing
-
-### Background Task Processor
-    
-        
-        
-    
-        
-        
-        
-    
-        
-        
-    
-        
-        
-    
-        
-        
-            
-            
-            
-            
-    
-    
-    
-
-
-## Cron Monitoring and Debugging
-
-### Cron Status Dashboard
-    
-    
-            
-            
-    
-        
-
-
-## Best Practices
-
-
-## Resources
-
-
-
-
-# WordPress Third-Party Integrations
 @mcp.resource("wordpress://integrations/payment-gateways")
 def get_payment_gateways() -> str:
     """WordPress Payment Gateway Integration - Stripe, PayPal, WooCommerce payments"""
     return load_resource_content("integrations", "payment-gateways")
-
-## Stripe Integration
-
-### Basic Stripe Setup
-    
-
-
-    
-    
-    
-    
-        
-
-### Stripe Webhook Handler
-
-    
-    
-            
-            
-    
-
-    
-    
-
-    
-
-## PayPal Integration
-
-### PayPal REST API Integration
-    
-        
-        
-    
-        
-        
-        
-        
-        
-        
-        
-        
-    
-        
-        
-        
-        
-        
-        
-        
-    
-        
-        
-    
-
-
-## Email Service Integration
-
-### Mailchimp Integration
-    
-        
-    
-        
-        
-        
-        
-        
-        
-        
-        
-
-## Social Media Integration
-
-### Twitter API Integration
-    
-        
-    
-        
-        
-        
-        
-        
-    
-        
-        
-        
-    
-        
-        
-        
-
-## Best Practices
-
-
-## Resources
-
 
 
 @mcp.resource("wordpress://integrations/analytics-tracking")
@@ -1564,214 +779,8 @@ def get_analytics_tracking() -> str:
     """WordPress Analytics and Tracking Integration - Google Analytics, Facebook Pixel, custom tracking"""
     return load_resource_content("integrations", "analytics-tracking")
 
-## Google Analytics 4 Integration
 
-### Basic GA4 Setup
-    
-
-### Enhanced GA4 with Custom Events
-    
-        
-    
-            
-    
-        
-    
-        
-            
-            
-    
-    
-
-
-## Facebook Pixel Integration
-
-### Basic Facebook Pixel Setup
-    
-
-### Enhanced Facebook Pixel with Custom Events
-    
-        
-    
-    
-            
-            
-
-
-## Custom Analytics Dashboard
-
-### WordPress Analytics Dashboard
-    
-    
-    
-            
-                
-                
-                
-        
-    
-        
-        
-    
-    
-        
-        
-    
-
-
-## Best Practices
-
-
-## Resources
-
-
-
-
-# WordPress Development Workflows
 @mcp.resource("wordpress://workflows/development-workflow")
 def get_development_workflow() -> str:
     """WordPress Development Workflow - Git, deployment, testing, and automation best practices"""
     return load_resource_content("workflows", "development-workflow")
-
-## Git Workflow for WordPress
-
-### Branching Strategy
-# Main branches
-
-# Example workflow
-# ... develop feature ...
-# Create pull request to develop
-
-### WordPress-Specific Git Configuration
-# .gitignore for WordPress
-# WordPress core files
-
-# WordPress uploads
-
-# WordPress cache
-
-# WordPress config
-
-# Dependencies
-
-# IDE files
-
-# OS files
-
-# Logs
-
-## Development Environment Setup
-
-### Docker WordPress Development
-# Dockerfile
-
-# Install additional PHP extensions
-
-# Install Composer
-
-# Install Node.js
-
-# Copy custom configuration
-
-# Install WordPress CLI
-
-### Docker Compose Configuration
-# docker-compose.yml
-
-
-
-
-
-## Automated Testing Workflow
-
-### PHPUnit Testing Setup
-
-
-
-
-
-
-
-### Test Case Example
-
-    
-    
-    
-        
-    
-    
-    
-
-### Automated Testing Script
-#!/bin/bash
-# scripts/run-tests.sh
-
-
-# Install WordPress test environment
-
-# Run PHPUnit tests
-
-# Run PHPCS (PHP CodeSniffer)
-
-# Run PHPStan (Static analysis)
-
-
-## Deployment Workflow
-
-### GitHub Actions for WordPress
-# .github/workflows/deploy.yml
-
-
-    
-    
-        
-        
-      
-      
-      
-
-    
-    
-          
-
-### WP-CLI Deployment Script
-#!/bin/bash
-# scripts/deploy.sh
-
-
-# Set deployment variables
-
-# Create backup
-
-# Deploy new version
-
-# Activate plugin
-
-# Run database migrations
-
-# Clear caches
-
-
-## Code Quality Workflow
-
-### Pre-commit Hooks
-#!/bin/bash
-# .git/hooks/pre-commit
-
-
-# Run PHPCS
-
-# Run PHPStan
-
-# Run tests
-
-
-### Composer Scripts
-
-## Best Practices
-
-
-## Resources
-
-
-
