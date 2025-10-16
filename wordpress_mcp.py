@@ -303,6 +303,263 @@ def get_phpunit_testing() -> str:
 def get_quality_assurance() -> str:
     """Quality Assurance - Code quality tools, security testing, and automated workflows"""
     return load_resource_content("testing", "quality-assurance")
+
+# === MCP PROMPTS ===
+
+@mcp.prompt()
+def plugin_development_workflow():
+    """Complete WordPress plugin development workflow with best practices"""
+    return """I'm developing a WordPress plugin. Guide me through the complete development workflow:
+
+## Phase 1: Planning & Structure
+Help me with:
+1. **Plugin structure and file organization**
+   - What files are required?
+   - How should I organize my code?
+   - Best practices for namespacing
+
+2. **Plugin header requirements**
+   - All required header fields
+   - Validation rules for each field
+   - License requirements
+
+Ask me about:
+- What is your plugin's purpose and main functionality?
+- Will it need database tables?
+- Does it require admin pages or settings?
+- Will it interact with the REST API?
+
+## Phase 2: Security Implementation
+Check and guide me on:
+1. **Input validation** - Are all inputs validated?
+2. **Data sanitization** - Is all data sanitized before saving?
+3. **Output escaping** - Is all output properly escaped?
+4. **Nonces** - Are all forms and AJAX requests using nonces?
+5. **Capability checks** - Are user permissions checked?
+6. **SQL injection prevention** - Are prepared statements used?
+
+For each security item:
+- Show me examples of correct implementation
+- Explain common vulnerabilities
+- Provide code snippets I can use
+
+## Phase 3: Code Quality
+Review for:
+1. **WordPress Coding Standards** - Does my code follow PHP standards?
+2. **Internationalization** - Is my plugin translation-ready?
+3. **Performance** - Are queries optimized?
+4. **Documentation** - Are functions properly documented?
+
+## Phase 4: Pre-Submission Checklist
+Before submitting to WordPress.org:
+1. Run through Plugin Check requirements
+2. Verify readme.txt format
+3. Check for trademark violations
+4. Remove development files
+5. Test with WP_DEBUG enabled
+
+For each step:
+- Provide best practices
+- Show code examples
+- Highlight common pitfalls
+- Link to relevant resources from the server
+
+Let's start with Phase 1. Please describe your plugin idea.
+"""
+
+@mcp.prompt()
+def security_audit():
+    """Comprehensive WordPress security audit workflow"""
+    return """I need to perform a security audit on WordPress code. Let's systematically check for all common vulnerabilities:
+
+## Critical Security Checks
+
+### 1. Input Validation
+Analyze all code that accepts user input:
+- Are $_GET, $_POST, $_REQUEST values validated?
+- Are file uploads checked for type and size?
+- Are URL parameters validated?
+
+For each issue found, I'll show:
+- Vulnerable code
+- Secure fix
+- WordPress documentation reference
+
+### 2. Output Escaping
+Check every instance of output:
+- Are variables properly escaped with esc_html(), esc_attr(), esc_url()?
+- Is HTML output using wp_kses() or wp_kses_post()?
+- Are JavaScript strings escaped with esc_js()?
+
+### 3. SQL Injection
+Review all database queries:
+- Are $wpdb->prepare() statements used?
+- Are direct SQL queries avoided?
+- Are dynamic table/column names properly validated?
+
+### 4. CSRF Protection (Nonces)
+Verify all state-changing operations:
+- Are forms using wp_nonce_field()?
+- Are AJAX requests using wp_create_nonce() and check_ajax_referer()?
+- Are URL actions using wp_nonce_url() and wp_verify_nonce()?
+
+### 5. Authentication & Authorization
+Check permission checks:
+- Is current_user_can() used before sensitive operations?
+- Are capability checks appropriate for the action?
+- Is is_admin() misused for security? (Not a security check!)
+
+### 6. File Upload Security
+If handling uploads:
+- Are file types whitelisted?
+- Is file size limited?
+- Is ALLOW_UNFILTERED_UPLOADS avoided?
+
+### 7. API Security
+If using REST API:
+- Are authentication methods implemented?
+- Are permission callbacks defined?
+- Is input validated in the schema?
+
+### 8. XSS Prevention
+Check for Cross-Site Scripting vectors:
+- User-generated content display
+- Reflected input in error messages
+- Admin page output
+
+Ready to start? Share the code you want me to audit.
+"""
+
+@mcp.prompt()
+def performance_optimization():
+    """WordPress performance analysis and optimization workflow"""
+    return """Let's optimize your WordPress site/plugin/theme for maximum performance:
+
+## Performance Analysis Areas
+
+### 1. Database Optimization
+- Query efficiency with WP_Query parameters
+- Avoiding posts_per_page => -1
+- Using fields => 'ids' when appropriate
+- N+1 query problems
+- Database indexes
+
+### 2. Asset Optimization  
+- Proper script/style enqueuing
+- Loading scripts in footer
+- Using defer/async attributes
+- Minification and size limits
+- Conditional loading
+
+### 3. Caching Strategy
+- Transients for expensive operations
+- Object caching
+- Page caching considerations
+
+### 4. Code Optimization
+- Autoloading classes
+- Conditional loading
+- Hook priority optimization
+
+### 5. External Requests
+- Caching remote requests
+- Timeout configuration
+- Error handling
+
+Describe your performance issue or share code to analyze!
+"""
+
+@mcp.prompt()
+def plugin_check_preparation():
+    """Prepare WordPress plugin for WordPress.org submission"""
+    return """Let's prepare your plugin for WordPress.org submission and ensure it passes all Plugin Check requirements:
+
+## Complete Preparation Workflow
+
+### Phase 1: Required Files & Headers
+- Plugin header with all required fields
+- readme.txt with proper structure
+- Valid GPL-compatible license
+
+### Phase 2: Security Audit
+- Input validation checklist
+- Output escaping verification
+- Nonce usage check
+- Capability checks
+- SQL injection prevention
+
+### Phase 3: Code Quality
+- WordPress Coding Standards
+- Internationalization
+- File checks
+- No deprecated functions
+
+### Phase 4: Required Functionality
+- Uninstall cleanup
+- Proper script/style enqueuing
+
+### Phase 5: Trademark Check
+- Plugin slug validation
+- Name compliance
+
+### Phase 6: Testing
+- Run Plugin Check tool
+- WP_DEBUG testing
+
+### Phase 7: Pre-Submission Checklist
+- Complete checklist with all requirements
+
+Share your plugin and I'll review it against all requirements!
+"""
+
+@mcp.prompt()
+def theme_development_guide():
+    """Complete WordPress theme development workflow"""
+    return """Let's build a professional WordPress theme together:
+
+## Theme Development Workflow
+
+### Phase 1: Theme Type Decision
+- Block Theme (Modern - Full Site Editing)
+- Classic Theme (Traditional PHP templates)
+
+### Phase 2: Required Files & Structure
+- style.css with proper header
+- Required template files
+- functions.php setup
+
+### Phase 3: Essential Theme Features
+- Theme supports
+- Navigation menus
+- Widget areas
+- Custom post type support
+
+### Phase 4: Template Development
+- Template hierarchy
+- WordPress template tags
+- Security (output escaping)
+- Performance optimization
+
+### Phase 5: Accessibility
+- WCAG 2.1 Level AA compliance
+- Keyboard navigation
+- ARIA labels
+- Color contrast
+
+### Phase 6: Performance
+- Optimized asset loading
+- Efficient queries
+- Responsive images
+
+### Phase 7: Testing
+- Theme Check plugin
+- Multiple content types
+- Responsive testing
+- Browser compatibility
+
+Tell me which type of theme you want to build and I'll guide you through it!
+"""
+
 # === MCP TOOLS IMPLEMENTATION ===
 
 @mcp.tool()
