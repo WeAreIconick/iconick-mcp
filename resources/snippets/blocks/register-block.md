@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [blocks, gutenberg, registration, react]
+related: [blocks/dynamic-block, blocks/block-patterns]
+use_case: Creating Gutenberg blocks
+---
+
 # Register Gutenberg Block
 
 ```php

@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [cpt, templates, themes, display]
+related: [cpt/register-custom-post-type]
+use_case: Custom templates for CPTs
+---
+
 # Custom Post Type Templates
 
 ```php

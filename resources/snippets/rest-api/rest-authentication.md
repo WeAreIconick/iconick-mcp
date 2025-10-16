@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [rest, api, authentication, security]
+related: [rest-api/custom-endpoint, security/capability-checks]
+use_case: Securing REST API endpoints
+---
+
 # REST API Authentication
 
 ```php

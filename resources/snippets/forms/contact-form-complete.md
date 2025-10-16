@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [forms, contact, email, validation]
+related: [forms/ajax-form, security/validate-user-input]
+use_case: Complete contact form implementation
+---
+
 # Complete Contact Form
 
 ```php

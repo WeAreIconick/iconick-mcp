@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [admin, meta-box, custom-fields, editor]
+related: [hooks/save-post-hook, cpt/register-custom-post-type]
+use_case: Custom meta boxes in editor
+---
+
 # Add Meta Box
 
 ```php

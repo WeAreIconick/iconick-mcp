@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [performance, images, lazy-load, speed]
+related: [performance/defer-async-scripts]
+use_case: Lazy loading images
+---
+
 # Lazy Load Images
 
 ```php

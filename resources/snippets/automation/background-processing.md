@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [automation, background, async, tasks]
+related: [automation/wp-cron]
+use_case: Processing tasks in background
+---
+
 # Background Processing
 
 ```php

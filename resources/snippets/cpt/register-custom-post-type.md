@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [cpt, post-types, registration, content]
+related: [cpt/register-taxonomy, cpt/cpt-query-examples]
+use_case: Creating custom content types
+---
+
 # Register Custom Post Type
 
 ## Basic Custom Post Type

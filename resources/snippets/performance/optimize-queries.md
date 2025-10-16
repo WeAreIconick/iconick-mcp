@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [performance, database, queries, optimization]
+related: [database/wpdb-queries, hooks/custom-wp-query]
+use_case: Optimizing database queries
+---
+
 # Optimize WordPress Queries
 
 ```php

@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [multisite, network, settings, multi-tenant]
+related: [multisite/switch-to-blog, admin/add-admin-page]
+use_case: Network-wide settings
+---
+
 # Network-Wide Settings
 
 ```php

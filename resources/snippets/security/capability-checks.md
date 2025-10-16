@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [security, capabilities, permissions, authorization]
+related: [security/nonces, admin/add-admin-page]
+use_case: Checking user permissions before actions
+---
+
 # Capability Checks
 
 ```php

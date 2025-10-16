@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [ajax, heartbeat, realtime, polling]
+related: [ajax/admin-ajax]
+use_case: Real-time communication with server
+---
+
 # WordPress Heartbeat API
 
 ```php

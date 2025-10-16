@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [security, sql, database, injection]
+related: [database/wpdb-queries, security/sanitize-input]
+use_case: Safe database queries with $wpdb->prepare()
+---
+
 # SQL Injection Prevention
 
 ```php

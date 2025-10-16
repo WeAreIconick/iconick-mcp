@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [woocommerce, payment, gateway, ecommerce]
+related: [woocommerce/custom-checkout-field]
+use_case: Creating payment gateways
+---
+
 # Custom Payment Gateway
 
 ```php

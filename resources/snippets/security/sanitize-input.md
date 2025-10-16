@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [security, sanitization, input, validation]
+related: [security/escape-output, security/nonces, security/validate-user-input]
+use_case: Cleaning user input before saving to database
+---
+
 # Sanitize User Input
 
 ## Text Field Sanitization

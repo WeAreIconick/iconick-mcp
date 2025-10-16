@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [cli, wp-cli, commands, terminal]
+related: [cli/custom-wp-cli-command, deployment/git-deployment]
+use_case: Common WP-CLI commands
+---
+
 # WP-CLI Common Commands
 
 ```bash

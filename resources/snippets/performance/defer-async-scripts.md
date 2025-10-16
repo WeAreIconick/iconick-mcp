@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [performance, scripts, async, defer]
+related: [hooks/wp-enqueue-scripts]
+use_case: Optimizing script loading
+---
+
 # Defer and Async Scripts
 
 ```php

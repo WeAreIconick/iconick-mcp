@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [ajax, frontend, javascript, public]
+related: [ajax/admin-ajax, security/nonces]
+use_case: AJAX requests on frontend/public pages
+---
+
 # Frontend AJAX - Public Facing
 
 ## Complete Frontend AJAX Example

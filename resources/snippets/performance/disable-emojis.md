@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [performance, emojis, optimization, speed]
+related: [performance/defer-async-scripts]
+use_case: Removing emoji scripts
+---
+
 # Disable WordPress Emojis
 
 ```php

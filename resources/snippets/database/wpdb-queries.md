@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [database, wpdb, sql, queries]
+related: [security/sql-injection-prevention, database/custom-tables]
+use_case: Direct database queries with $wpdb
+---
+
 # $wpdb Query Examples
 
 ```php

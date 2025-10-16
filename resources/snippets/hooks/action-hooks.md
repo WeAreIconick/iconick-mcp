@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [hooks, actions, filters, api]
+related: [hooks/filter-hooks, hooks/save-post-hook]
+use_case: Using WordPress action hooks
+---
+
 # Common Action Hooks
 
 ```php

@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [woocommerce, products, custom-fields, ecommerce]
+related: [woocommerce/custom-checkout-field, admin/meta-box]
+use_case: Adding custom product fields
+---
+
 # Add Custom Product Field
 
 ```php

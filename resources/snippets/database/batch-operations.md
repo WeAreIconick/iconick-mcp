@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [database, batch, bulk, performance]
+related: [database/wpdb-queries]
+use_case: Bulk database operations
+---
+
 # Batch Database Operations
 
 ```php

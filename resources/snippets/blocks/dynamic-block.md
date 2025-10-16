@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [blocks, gutenberg, dynamic, server-side]
+related: [blocks/register-block]
+use_case: Server-side rendered blocks
+---
+
 # Dynamic Block (Server-Side Rendering)
 
 ```php

@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [deployment, git, devops, automation]
+related: [deployment/environment-config, cli/wp-cli-commands]
+use_case: Git-based deployment workflow
+---
+
 # Git-Based Deployment
 
 ```bash

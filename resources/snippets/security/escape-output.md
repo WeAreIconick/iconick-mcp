@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [security, escaping, output, xss]
+related: [security/sanitize-input, security/nonces]
+use_case: Preventing XSS attacks when displaying data
+---
+
 # Escape Output for Display
 
 ## HTML Content

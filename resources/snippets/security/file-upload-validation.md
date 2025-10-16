@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [security, uploads, files, validation]
+related: [security/validate-user-input, admin/add-admin-page]
+use_case: Secure file upload handling
+---
+
 # Secure File Upload
 
 ```php

@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [admin, notices, messages, ui]
+related: [admin/add-admin-page]
+use_case: Displaying admin notices
+---
+
 # Admin Notices
 
 ```php

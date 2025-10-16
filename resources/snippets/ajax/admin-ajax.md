@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [ajax, admin, javascript, wp-admin]
+related: [security/nonces, ajax/frontend-ajax]
+use_case: AJAX requests in WordPress admin
+---
+
 # WordPress Admin AJAX - Complete Pattern
 
 ## Complete AJAX Implementation

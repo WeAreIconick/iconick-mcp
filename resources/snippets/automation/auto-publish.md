@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [automation, publishing, scheduled, content]
+related: [automation/wp-cron, hooks/save-post-hook]
+use_case: Auto-publishing posts
+---
+
 # Auto-Publish Scheduled Posts
 
 ```php

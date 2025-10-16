@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [ajax, pagination, load-more, infinite-scroll]
+related: [ajax/frontend-ajax, hooks/custom-wp-query]
+use_case: AJAX-powered pagination and infinite scroll
+---
+
 # AJAX Pagination
 
 ```php

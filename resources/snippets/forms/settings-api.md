@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [forms, settings, api, admin]
+related: [admin/add-admin-page, security/nonces]
+use_case: Creating settings pages
+---
+
 # WordPress Settings API
 
 ```php

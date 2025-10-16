@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [hooks, save-post, meta, custom-fields]
+related: [hooks/action-hooks, admin/meta-box]
+use_case: Running code when posts are saved
+---
+
 # Save Post Hook
 
 ```php

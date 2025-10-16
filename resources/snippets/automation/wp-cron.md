@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [automation, cron, scheduled, tasks]
+related: [automation/background-processing]
+use_case: Scheduled background tasks
+---
+
 # WordPress Cron Jobs
 
 ```php

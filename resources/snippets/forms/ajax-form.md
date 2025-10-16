@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [forms, ajax, validation, submission]
+related: [ajax/frontend-ajax, security/nonces]
+use_case: AJAX form submission
+---
+
 # Complete AJAX Form
 
 ```php

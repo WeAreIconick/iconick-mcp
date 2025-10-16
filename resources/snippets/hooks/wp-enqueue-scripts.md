@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [hooks, enqueue, scripts, styles]
+related: [performance/defer-async-scripts]
+use_case: Properly loading CSS and JavaScript
+---
+
 # Enqueue Scripts and Styles
 
 ```php

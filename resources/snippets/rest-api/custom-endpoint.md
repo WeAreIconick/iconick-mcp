@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [rest, api, endpoints, json]
+related: [rest-api/rest-authentication, security/nonces]
+use_case: Creating custom REST endpoints
+---
+
 # Custom REST API Endpoint
 
 ```php

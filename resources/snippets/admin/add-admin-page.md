@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [admin, menu, pages, settings]
+related: [forms/settings-api, admin/settings-page-tabs]
+use_case: Adding admin menu pages
+---
+
 # Add Admin Page
 
 ```php

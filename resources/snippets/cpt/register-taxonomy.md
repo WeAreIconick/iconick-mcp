@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [taxonomy, terms, categories, tags]
+related: [cpt/register-custom-post-type, cpt/cpt-query-examples]
+use_case: Creating custom taxonomies
+---
+
 # Register Custom Taxonomy
 
 ```php

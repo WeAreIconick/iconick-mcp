@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [blocks, patterns, templates, layouts]
+related: [blocks/register-block]
+use_case: Creating reusable block patterns
+---
+
 # Block Patterns
 
 ```php

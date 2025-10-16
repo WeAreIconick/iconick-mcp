@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [automation, email, notifications, alerts]
+related: [automation/auto-publish, forms/contact-form-complete]
+use_case: Automated email notifications
+---
+
 # Automated Email Notifications
 
 ```php

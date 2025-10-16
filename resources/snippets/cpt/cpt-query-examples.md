@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [cpt, queries, wp-query, database]
+related: [cpt/register-custom-post-type, hooks/custom-wp-query]
+use_case: Querying custom post types
+---
+
 # Custom Post Type Queries
 
 ```php

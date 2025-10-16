@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [deployment, environment, config, devops]
+related: [deployment/git-deployment]
+use_case: Environment-specific configuration
+---
+
 # Environment-Specific Configuration
 
 ```php

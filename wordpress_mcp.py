@@ -308,48 +308,129 @@ def get_quality_assurance() -> str:
 
 @mcp.resource("wordpress://snippets/list")
 def list_code_snippets() -> str:
-    """Complete catalog of all 62 available code snippets"""
+    """Complete catalog of all 62 code snippets with metadata, tags, and difficulty levels"""
+    import re
+    
     snippets_dir = RESOURCES_DIR / "snippets"
     
     if not snippets_dir.exists():
         return "# Code Snippets\n\nSnippet library is being initialized."
     
     output = "# WordPress Code Snippets Library\n\n"
-    output += "**62 ready-to-use code examples** for common WordPress development tasks.\n\n"
-    output += "## How to Use\n\n"
-    output += "Ask your AI assistant for any snippet by name. Examples:\n"
-    output += '- "Show me the admin-ajax snippet"\n'
-    output += '- "Get the sanitize-input code"\n'
-    output += '- "Display the custom post type registration example"\n\n'
+    output += "**62 ready-to-use code examples** with metadata and searchable tags.\n\n"
     
+    output += "## 🔍 How to Use\n\n"
+    output += "### Get Specific Snippet:\n"
+    output += '```\nwordpress://snippets/{category}/{snippet-name}\n```\n\n'
+    output += "**Examples:**\n"
+    output += '- `wordpress://snippets/security/sanitize-input`\n'
+    output += '- `wordpress://snippets/ajax/admin-ajax`\n'
+    output += '- `wordpress://snippets/cpt/register-custom-post-type`\n\n'
+    
+    output += "### Search Snippets:\n"
+    output += 'Use `search_snippets()` tool:\n'
+    output += '- By difficulty: `search_snippets(difficulty="Beginner")`\n'
+    output += '- By tag: `search_snippets(tag="security")`\n'
+    output += '- By query: `search_snippets(query="ajax")`\n\n'
+    
+    output += "---\n\n"
+    
+    # Collect all snippets with metadata
+    all_snippets = []
     total = 0
+    
     for category_dir in sorted(snippets_dir.iterdir()):
         if category_dir.is_dir():
             category = category_dir.name
-            snippets = sorted([f.stem for f in category_dir.glob("*.md")])
-            total += len(snippets)
             
-            if snippets:
-                output += f"## {category.replace('-', ' ').title()} ({len(snippets)} snippets)\n\n"
-                for snippet in snippets:
-                    # Get first line as description
-                    try:
-                        with open(category_dir / f"{snippet}.md", 'r', encoding='utf-8') as f:
-                            first_line = f.readline().strip()
-                            title = first_line.replace('#', '').strip() if first_line.startswith('#') else snippet
-                    except:
-                        title = snippet.replace('-', ' ').title()
-                    
-                    output += f"- **{snippet}** - {title}\n"
+            for snippet_file in sorted(category_dir.glob("*.md")):
+                total += 1
+                snippet_name = snippet_file.stem
                 
-                output += "\n"
+                # Read metadata
+                try:
+                    with open(snippet_file, 'r', encoding='utf-8') as f:
+                        content = f.read()
+                    
+                    metadata = {
+                        'name': snippet_name,
+                        'category': category,
+                        'difficulty': 'Intermediate',
+                        'tags': [],
+                        'use_case': ''
+                    }
+                    
+                    # Parse frontmatter
+                    if content.startswith('---'):
+                        match = re.search(r'---\n(.*?)\n---', content, re.DOTALL)
+                        if match:
+                            meta_str = match.group(1)
+                            
+                            diff_match = re.search(r'difficulty:\s*(\w+)', meta_str)
+                            if diff_match:
+                                metadata['difficulty'] = diff_match.group(1)
+                            
+                            tags_match = re.search(r'tags:\s*\[(.*?)\]', meta_str)
+                            if tags_match:
+                                metadata['tags'] = [t.strip() for t in tags_match.group(1).split(',')]
+                            
+                            use_match = re.search(r'use_case:\s*(.+)', meta_str)
+                            if use_match:
+                                metadata['use_case'] = use_match.group(1).strip()
+                    
+                    all_snippets.append(metadata)
+                    
+                except:
+                    continue
     
-    output += f"---\n\n**Total: {total} code snippets**\n\n"
-    output += "All snippets include:\n"
-    output += "- Complete working code examples\n"
-    output += "- Security best practices\n"
-    output += "- WordPress coding standards\n"
-    output += "- Copy-paste ready implementations\n"
+    # Group by category
+    by_category = {}
+    for snippet in all_snippets:
+        cat = snippet['category']
+        if cat not in by_category:
+            by_category[cat] = []
+        by_category[cat].append(snippet)
+    
+    # Display by category
+    for category in sorted(by_category.keys()):
+        snippets = by_category[category]
+        output += f"## {category.replace('-', ' ').title()} ({len(snippets)} snippets)\n\n"
+        
+        for snippet in sorted(snippets, key=lambda x: x['name']):
+            output += f"### {snippet['name']}\n\n"
+            output += f"**Difficulty:** {snippet['difficulty']}\n\n"
+            
+            if snippet['use_case']:
+                output += f"**Use Case:** {snippet['use_case']}\n\n"
+            
+            if snippet['tags']:
+                output += f"**Tags:** {', '.join(snippet['tags'][:5])}\n\n"
+            
+            output += f"**URI:** `wordpress://snippets/{snippet['category']}/{snippet['name']}`\n\n"
+            output += "---\n\n"
+    
+    # Summary
+    output += f"\n## 📊 Summary\n\n"
+    output += f"**Total Snippets:** {total}\n\n"
+    
+    # Count by difficulty
+    by_diff = {}
+    for snippet in all_snippets:
+        diff = snippet['difficulty']
+        by_diff[diff] = by_diff.get(diff, 0) + 1
+    
+    output += "**By Difficulty:**\n"
+    for diff in ['Beginner', 'Intermediate', 'Advanced']:
+        if diff in by_diff:
+            output += f"- {diff}: {by_diff[diff]} snippets\n"
+    
+    output += "\n**Features:**\n"
+    output += "- ✅ Complete working code examples\n"
+    output += "- ✅ Security best practices built-in\n"
+    output += "- ✅ WordPress coding standards compliant\n"
+    output += "- ✅ Copy-paste ready implementations\n"
+    output += "- ✅ Searchable by tags and difficulty\n"
+    output += "- ✅ Related snippet suggestions\n"
     
     return output
 
@@ -399,6 +480,160 @@ def get_code_snippet(category: str, topic: str) -> str:
 def get_resource_catalog() -> str:
     """Complete searchable catalog of all WordPress resources with metadata, tags, and learning paths"""
     return load_resource_content(".", "catalog")
+
+@mcp.tool()
+def search_snippets(
+    query: str = "",
+    difficulty: str = "",
+    tag: str = "",
+    category: str = ""
+) -> str:
+    """
+    Search and filter WordPress code snippets
+    
+    Args:
+        query: Search term (searches names, tags, use cases)
+        difficulty: Filter by difficulty (Beginner, Intermediate, Advanced)
+        tag: Filter by tag (e.g., "security", "ajax", "performance")
+        category: Filter by category (e.g., "security", "ajax", "blocks")
+    
+    Returns:
+        List of matching code snippets with metadata and URIs
+        
+    Examples:
+        search_snippets(query="security")
+        search_snippets(difficulty="Beginner")
+        search_snippets(tag="ajax", difficulty="Intermediate")
+        search_snippets(category="performance")
+    """
+    import re
+    
+    results = []
+    snippets_dir = RESOURCES_DIR / "snippets"
+    
+    # Scan all snippet files
+    for snippet_file in snippets_dir.glob("**/*.md"):
+        relative_path = snippet_file.relative_to(snippets_dir)
+        file_category = relative_path.parts[0] if len(relative_path.parts) > 1 else "other"
+        snippet_name = snippet_file.stem
+        
+        # Read file and metadata
+        try:
+            with open(snippet_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except:
+            continue
+        
+        snippet_data = {
+            'name': snippet_name,
+            'category': file_category,
+            'difficulty': 'Intermediate',
+            'tags': [],
+            'use_case': '',
+            'related': []
+        }
+        
+        # Parse frontmatter
+        if content.startswith('---'):
+            match = re.search(r'---\n(.*?)\n---', content, re.DOTALL)
+            if match:
+                meta_str = match.group(1)
+                
+                diff_match = re.search(r'difficulty:\s*(\w+)', meta_str)
+                if diff_match:
+                    snippet_data['difficulty'] = diff_match.group(1)
+                
+                tags_match = re.search(r'tags:\s*\[(.*?)\]', meta_str)
+                if tags_match:
+                    snippet_data['tags'] = [t.strip() for t in tags_match.group(1).split(',')]
+                
+                use_match = re.search(r'use_case:\s*(.+)', meta_str)
+                if use_match:
+                    snippet_data['use_case'] = use_match.group(1).strip()
+                
+                related_match = re.search(r'related:\s*\[(.*?)\]', meta_str)
+                if related_match:
+                    snippet_data['related'] = [r.strip() for r in related_match.group(1).split(',')]
+        
+        # Apply filters
+        if difficulty and snippet_data['difficulty'] != difficulty:
+            continue
+        
+        if tag and tag not in snippet_data['tags']:
+            continue
+        
+        if category and file_category != category:
+            continue
+        
+        if query:
+            query_lower = query.lower()
+            if (query_lower not in snippet_name.lower() and
+                query_lower not in file_category.lower() and
+                query_lower not in snippet_data['use_case'].lower() and
+                not any(query_lower in t.lower() for t in snippet_data['tags'])):
+                continue
+        
+        results.append(snippet_data)
+    
+    # Format results
+    if not results:
+        return f"""# No Snippets Found
+
+**Search criteria:**
+- Query: {query or 'all'}
+- Difficulty: {difficulty or 'all'}
+- Tag: {tag or 'all'}
+- Category: {category or 'all'}
+
+Try broader search terms or check `wordpress://snippets/list` for all snippets.
+"""
+    
+    output = f"# Code Snippets Search Results\n\n"
+    output += f"**Found {len(results)} snippet(s)**\n\n"
+    
+    if query:
+        output += f"**Query:** {query}\n"
+    if difficulty:
+        output += f"**Difficulty:** {difficulty}\n"
+    if tag:
+        output += f"**Tag:** {tag}\n"
+    if category:
+        output += f"**Category:** {category}\n"
+    
+    output += "\n---\n\n"
+    
+    # Group by category
+    by_category = {}
+    for snippet in results:
+        cat = snippet['category']
+        if cat not in by_category:
+            by_category[cat] = []
+        by_category[cat].append(snippet)
+    
+    for cat in sorted(by_category.keys()):
+        snippets = by_category[cat]
+        output += f"## {cat.replace('-', ' ').title()} ({len(snippets)})\n\n"
+        
+        for snippet in sorted(snippets, key=lambda x: x['name']):
+            output += f"### {snippet['name']}\n\n"
+            output += f"**Difficulty:** {snippet['difficulty']}\n\n"
+            
+            if snippet['use_case']:
+                output += f"**Use Case:** {snippet['use_case']}\n\n"
+            
+            if snippet['tags']:
+                output += f"**Tags:** {', '.join(snippet['tags'][:5])}\n\n"
+            
+            output += f"**Get Snippet:** `wordpress://snippets/{cat}/{snippet['name']}`\n\n"
+            
+            if snippet['related']:
+                output += f"**Related:** {', '.join(snippet['related'][:3])}\n\n"
+            
+            output += "---\n\n"
+    
+    output += f"\n💡 **Tip:** Use `wordpress://snippets/list` to browse all 62 snippets.\n"
+    
+    return output
 
 @mcp.tool()
 def search_resources(

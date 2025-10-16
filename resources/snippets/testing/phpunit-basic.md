@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [testing, phpunit, unit-tests, qa]
+related: [testing/mock-data]
+use_case: PHPUnit testing basics
+---
+
 # PHPUnit Test Examples
 
 ```php

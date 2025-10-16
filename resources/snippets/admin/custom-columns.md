@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [admin, columns, list-table, ui]
+related: [cpt/register-custom-post-type]
+use_case: Custom columns in admin lists
+---
+
 # Custom Admin Columns
 
 ```php

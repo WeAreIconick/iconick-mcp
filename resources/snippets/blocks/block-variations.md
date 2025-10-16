@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [blocks, variations, gutenberg]
+related: [blocks/register-block]
+use_case: Block style variations
+---
+
 # Block Variations
 
 ```php

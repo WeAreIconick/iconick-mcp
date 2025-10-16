@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [security, nonces, csrf, forms]
+related: [security/sanitize-input, ajax/admin-ajax]
+use_case: CSRF protection for forms and AJAX
+---
+
 # WordPress Nonces - Complete Examples
 
 ## Form Nonce

@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [integrations, analytics, tracking, google]
+related: [integrations/mailchimp]
+use_case: Google Analytics integration
+---
+
 # Google Analytics Integration
 
 ```php

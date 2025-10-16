@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [integrations, email, mailchimp, api]
+related: [integrations/google-analytics, forms/ajax-form]
+use_case: Mailchimp email integration
+---
+
 # Mailchimp Integration
 
 ```php

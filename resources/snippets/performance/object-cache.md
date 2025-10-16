@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [performance, cache, object, speed]
+related: [performance/caching-transients]
+use_case: Using WordPress object cache
+---
+
 # Object Caching
 
 ```php

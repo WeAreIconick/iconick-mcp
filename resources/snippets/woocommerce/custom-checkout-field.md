@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [woocommerce, checkout, fields, ecommerce]
+related: [woocommerce/add-product-field, forms/ajax-form]
+use_case: Customizing checkout fields
+---
+
 # Custom WooCommerce Checkout Field
 
 ```php

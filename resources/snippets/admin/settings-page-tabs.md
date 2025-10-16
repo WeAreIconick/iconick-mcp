@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [admin, settings, tabs, ui]
+related: [admin/add-admin-page, forms/settings-api]
+use_case: Tabbed settings pages
+---
+
 # Settings Page with Tabs
 
 ```php

@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [hooks, wp-query, queries, posts]
+related: [cpt/cpt-query-examples, database/wpdb-queries]
+use_case: Advanced post queries
+---
+
 # Custom WP_Query Examples
 
 ```php

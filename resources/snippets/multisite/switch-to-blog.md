@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [multisite, network, sites, switching]
+related: [multisite/network-settings]
+use_case: Working with multiple sites
+---
+
 # Switch Between Sites
 
 ```php

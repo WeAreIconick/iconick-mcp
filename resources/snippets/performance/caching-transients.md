@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [performance, cache, transients, speed]
+related: [database/transients-cache, performance/object-cache]
+use_case: Caching expensive operations
+---
+
 # Caching with Transients
 
 ```php

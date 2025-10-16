@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [testing, mock, data, qa]
+related: [testing/phpunit-basic]
+use_case: Creating test data
+---
+
 # Create Mock/Test Data
 
 ```php

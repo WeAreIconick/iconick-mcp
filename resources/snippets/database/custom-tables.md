@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [database, tables, schema, sql]
+related: [database/wpdb-queries]
+use_case: Creating custom database tables
+---
+
 # Custom Database Tables
 
 ```php

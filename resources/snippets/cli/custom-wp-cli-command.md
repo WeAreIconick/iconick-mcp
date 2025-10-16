@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [cli, wp-cli, custom, commands]
+related: [cli/wp-cli-commands]
+use_case: Creating custom WP-CLI commands
+---
+
 # Custom WP-CLI Command
 
 ```php

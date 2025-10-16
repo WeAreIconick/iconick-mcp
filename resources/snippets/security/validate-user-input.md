@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [security, validation, forms, input]
+related: [security/sanitize-input, forms/ajax-form]
+use_case: Validating data format before processing
+---
+
 # Validate User Input
 
 ```php

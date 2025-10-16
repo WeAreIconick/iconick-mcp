@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [hooks, filters, actions, api]
+related: [hooks/action-hooks]
+use_case: Modifying data with filter hooks
+---
+
 # Common Filter Hooks
 
 ```php

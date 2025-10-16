@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [rest, api, fields, meta]
+related: [rest-api/custom-endpoint]
+use_case: Exposing custom fields in REST API
+---
+
 # Register Custom REST Fields
 
 ```php
