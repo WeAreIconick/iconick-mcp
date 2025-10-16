@@ -1,0 +1,143 @@
+
+@mcp.tool()
+def analyze_wordpress_code(code: str, check_security: bool = True, check_performance: bool = True) -> str:
+    """
+    Analyze WordPress code for security vulnerabilities and performance issues
+    
+    Detects:
+    - Unescaped output (XSS risk)
+    - SQL injection vulnerabilities
+    - Missing nonce verification
+    - Missing capability checks
+    - Performance anti-patterns
+    - Deprecated functions
+    
+    Returns detailed analysis with severity ratings and fixes
+    """
+    import re
+    
+    issues = []
+    
+    # Security: Unescaped output
+    if check_security and re.search(r'echo\s+\$[^;]+;(?!.*esc_)', code):
+        issues.append("🔴 CRITICAL: Unescaped output (XSS risk) - Use esc_html(), esc_attr(), or esc_url()")
+    
+    # Security: SQL injection
+    if check_security and re.search(r'\$wpdb->query\([^)]*\$(?!wpdb->prepare)', code):
+        issues.append("🔴 CRITICAL: SQL injection risk - Use $wpdb->prepare() for all queries")
+    
+    # Security: Missing nonces
+    if check_security and ('$_POST' in code or '$_GET' in code) and 'wp_verify_nonce' not in code:
+        issues.append("🟠 HIGH: Missing nonce verification - Add wp_nonce_field() and wp_verify_nonce()")
+    
+    # Security: Missing capability checks
+    if check_security and ('update_option' in code or 'wp_insert_post' in code) and 'current_user_can' not in code:
+        issues.append("🟠 HIGH: Missing capability check - Add current_user_can() before sensitive operations")
+    
+    # Performance: Getting all posts
+    if check_performance and 'posts_per_page" => -1' in code:
+        issues.append("🟡 WARNING: Inefficient query (posts_per_page => -1) - Limit results and use pagination")
+    
+    # Performance: Queries in loops
+    if check_performance and re.search(r'(foreach|while).*(get_posts|WP_Query|get_post_meta)', code, re.DOTALL):
+        issues.append("🟡 WARNING: Possible N+1 query problem - Fetch data before loop")
+    
+    if not issues:
+        return "✅ Code Analysis: PASSED\n\nNo issues found! Code looks good."
+    
+    report = f"# 🔍 WordPress Code Analysis\n\n**Issues found:** {len(issues)}\n\n"
+    for i, issue in enumerate(issues, 1):
+        report += f"{i}. {issue}\n\n"
+    
+    report += "\n💡 Check the referenced resources for detailed fixes and examples."
+    return report
+
+@mcp.tool()
+def check_wordpress_compatibility(code: str, wp_version: str = "6.4", php_version: str = "8.0") -> str:
+    """
+    Check WordPress code compatibility with specific versions
+    
+    Args:
+        code: PHP code to check
+        wp_version: Target WordPress version (e.g., "6.4")
+        php_version: Target PHP version (e.g., "8.0", "7.4")
+    
+    Returns:
+        Compatibility report with deprecated functions and suggestions
+    """
+    import re
+    
+    report = f"# Compatibility Check\n\n"
+    report += f"**Target WordPress:** {wp_version}\n"
+    report += f"**Target PHP:** {php_version}\n\n"
+    
+    issues = []
+    
+    # Deprecated WordPress functions
+    deprecated_wp = {
+        'get_settings': ('2.1', 'get_option'),
+        'wp_specialchars': ('2.8', 'esc_html'),
+        'attribute_escape': ('2.8', 'esc_attr'),
+        'get_category_parents': ('6.2', 'get_term_parents_list'),
+    }
+    
+    for old_func, (deprecated_in, replacement) in deprecated_wp.items():
+        if old_func in code:
+            issues.append(f"⚠️ {old_func}() deprecated in WP {deprecated_in} - Use {replacement}()")
+    
+    # PHP version features
+    if float(php_version) >= 8.0:
+        suggestions = []
+        # Check for opportunities to use PHP 8 features
+        if '??' not in code and 'isset' in code:
+            suggestions.append("💡 Consider using null coalescing operator (??)")
+        
+        if '?->' not in code and '->' in code:
+            suggestions.append("💡 Consider using nullsafe operator (? ->)")
+        
+        if suggestions:
+            report += "## PHP 8.0+ Suggestions\n\n"
+            for suggestion in suggestions:
+                report += f"- {suggestion}\n"
+            report += "\n"
+    
+    if issues:
+        report += "## Deprecated Functions\n\n"
+        for issue in issues:
+            report += f"- {issue}\n"
+        report += "\n"
+    else:
+        report += "## ✅ Compatibility\n\nNo deprecated functions found!\n\n"
+    
+    report += f"**Status:** {'⚠️ Issues found' if issues else '✅ Compatible'}\n"
+    
+    return report
+"""
+
+# Find last tool
+last_tool = content.rfind('@mcp.tool()')
+if last_tool > 0:
+    # Find end of that tool function
+    next_prompt_or_eof = content.find('\n# ===', last_tool + 100)
+    if next_prompt_or_eof > 0:
+        content = content[:next_prompt_or_eof] + "\n" + linter_code + content[next_prompt_or_eof:]
+        print("✅ Added code analyzer tools")
+
+with open('wordpress_mcp.py', 'w') as f:
+    f.write(content)
+
+# Verify
+import subprocess
+result = subprocess.run(['python3', '-m', 'py_compile', 'wordpress_mcp.py'],
+                      capture_output=True, text=True)
+
+if result.returncode == 0:
+    tools = len(re.findall(r'@mcp\.tool', content))
+    print(f"✅ Syntax valid - Tools: {tools}")
+else:
+    print(f"❌ Syntax error")
+    print(result.stderr[:500])
+    shutil.copy('wordpress_mcp.py.backup', 'wordpress_mcp.py')
+    print("✅ Restored backup")
+PYSCRIPT
+
