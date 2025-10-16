@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [cpt, post-types, custom, content]
+related: [advanced/taxonomies, advanced/meta-boxes]
+wp_version: 3.0+
+---
+
 # WordPress Custom Post Types
 
 ## Basic Registration

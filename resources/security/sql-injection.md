@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [security, sql, database, injection]
+related: [core/database-api, security/data-validation]
+wp_version: All
+---
+
 # WordPress SQL Injection Prevention
 
 SQL injection is a critical security vulnerability. WordPress provides tools to prevent it.

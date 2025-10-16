@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [security, sanitization, input, validation]
+related: [security/data-validation, security/escaping]
+wp_version: All
+---
+
 # WordPress Data Sanitization
 
 Sanitization cleans data before storing it in the database.

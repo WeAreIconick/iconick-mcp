@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [themes, blocks, fse, full-site-editing]
+related: [blocks/gutenberg-basics, themes/theme-development]
+wp_version: 5.9+
+---
+
 # WordPress Block Themes
 
 Block themes are the modern approach to WordPress theming, using HTML templates and block patterns.

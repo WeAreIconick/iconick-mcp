@@ -393,6 +393,166 @@ def get_code_snippet(category: str, topic: str) -> str:
     except Exception as e:
         return f"Error: {str(e)}\n\nUse wordpress://snippets/list to see all available snippets."
 
+# === RESOURCE CATALOG & DISCOVERY ===
+
+@mcp.resource("wordpress://catalog")
+def get_resource_catalog() -> str:
+    """Complete searchable catalog of all WordPress resources with metadata, tags, and learning paths"""
+    return load_resource_content(".", "catalog")
+
+@mcp.tool()
+def search_resources(
+    query: str = "",
+    difficulty: str = "",
+    tag: str = "",
+    category: str = ""
+) -> str:
+    """
+    Search and filter WordPress development resources
+    
+    Args:
+        query: Search term (searches titles and tags)
+        difficulty: Filter by difficulty (Beginner, Intermediate, Advanced)
+        tag: Filter by tag (e.g., "security", "blocks", "api")
+        category: Filter by category (e.g., "security", "blocks", "themes")
+    
+    Returns:
+        List of matching resources with metadata
+        
+    Examples:
+        search_resources(query="security")
+        search_resources(difficulty="Beginner")
+        search_resources(tag="blocks", difficulty="Intermediate")
+        search_resources(category="security")
+    """
+    import re
+    from pathlib import Path
+    
+    results = []
+    resources_dir = RESOURCES_DIR
+    
+    # Scan all resource files (excluding snippets)
+    for md_file in resources_dir.glob("**/*.md"):
+        if "snippets" in str(md_file) or md_file.name == "catalog.md":
+            continue
+        
+        relative_path = md_file.relative_to(resources_dir)
+        file_category = relative_path.parts[0] if len(relative_path.parts) > 1 else "other"
+        
+        # Read file
+        try:
+            with open(md_file, 'r', encoding='utf-8') as f:
+                content = f.read()
+        except:
+            continue
+        
+        # Extract metadata
+        resource_data = {
+            'name': md_file.stem,
+            'category': file_category,
+            'path': str(relative_path),
+            'difficulty': 'Intermediate',
+            'tags': [],
+            'related': []
+        }
+        
+        # Parse frontmatter if exists
+        if content.startswith('---'):
+            match = re.search(r'---\n(.*?)\n---', content, re.DOTALL)
+            if match:
+                metadata_str = match.group(1)
+                
+                # Extract difficulty
+                diff_match = re.search(r'difficulty:\s*(\w+)', metadata_str)
+                if diff_match:
+                    resource_data['difficulty'] = diff_match.group(1)
+                
+                # Extract tags
+                tags_match = re.search(r'tags:\s*\[(.*?)\]', metadata_str)
+                if tags_match:
+                    resource_data['tags'] = [t.strip() for t in tags_match.group(1).split(',')]
+                
+                # Extract related
+                related_match = re.search(r'related:\s*\[(.*?)\]', metadata_str)
+                if related_match:
+                    resource_data['related'] = [r.strip() for r in related_match.group(1).split(',')]
+        
+        # Apply filters
+        if difficulty and resource_data['difficulty'] != difficulty:
+            continue
+        
+        if tag and tag not in resource_data['tags']:
+            continue
+        
+        if category and file_category != category:
+            continue
+        
+        if query:
+            query_lower = query.lower()
+            if (query_lower not in resource_data['name'].lower() and
+                query_lower not in file_category.lower() and
+                not any(query_lower in t.lower() for t in resource_data['tags'])):
+                continue
+        
+        results.append(resource_data)
+    
+    # Format results
+    if not results:
+        return f"""# No Resources Found
+
+**Search criteria:**
+- Query: {query or 'all'}
+- Difficulty: {difficulty or 'all'}
+- Tag: {tag or 'all'}
+- Category: {category or 'all'}
+
+Try broader search terms or check `wordpress://catalog` for complete resource list.
+"""
+    
+    output = f"# WordPress Resources Search Results\n\n"
+    output += f"**Found {len(results)} resource(s)**\n\n"
+    
+    if query:
+        output += f"**Query:** {query}\n"
+    if difficulty:
+        output += f"**Difficulty:** {difficulty}\n"
+    if tag:
+        output += f"**Tag:** {tag}\n"
+    if category:
+        output += f"**Category:** {category}\n"
+    
+    output += "\n---\n\n"
+    
+    # Group by category
+    by_category = {}
+    for res in results:
+        cat = res['category']
+        if cat not in by_category:
+            by_category[cat] = []
+        by_category[cat].append(res)
+    
+    for cat in sorted(by_category.keys()):
+        resources = by_category[cat]
+        output += f"## {cat.title()} ({len(resources)})\n\n"
+        
+        for res in sorted(resources, key=lambda x: x['name']):
+            output += f"### {res['name']}\n\n"
+            output += f"**Difficulty:** {res['difficulty']}\n\n"
+            
+            if res['tags']:
+                output += f"**Tags:** {', '.join(res['tags'])}\n\n"
+            
+            output += f"**Resource:** `wordpress://{cat}/{res['name']}`\n\n"
+            
+            if res['related']:
+                output += f"**Related:** {', '.join(res['related'][:3])}\n\n"
+            
+            output += "---\n\n"
+    
+    output += f"\n💡 **Tip:** Use `wordpress://catalog` to browse all {len(results)} resources by category, difficulty, and tags.\n"
+    
+    return output
+
 # === MCP PROMPTS ===
 
 @mcp.prompt()

@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [rest, api, endpoints, custom]
+related: [rest-api/rest-api-basics, security/nonces]
+wp_version: 4.7+
+---
+
 # WordPress REST API Custom Endpoints
 
 Creating custom REST API endpoints for your WordPress applications.

@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [ajax, javascript, async, dynamic]
+related: [security/nonces, advanced/wordpress-hooks]
+wp_version: 2.0+
+---
+
 # WordPress AJAX Development
 
 ## Admin AJAX

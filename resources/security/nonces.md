@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [security, nonces, csrf, forms]
+related: [security/data-validation, advanced/ajax-development]
+wp_version: 2.0+
+---
+
 # WordPress Nonces
 
 Nonces (Number Used Once) protect against CSRF attacks by verifying request intent.

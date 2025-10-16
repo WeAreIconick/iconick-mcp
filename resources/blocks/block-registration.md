@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [blocks, registration, gutenberg, api]
+related: [blocks/gutenberg-basics, blocks/block-patterns]
+wp_version: 5.0+
+---
+
 # WordPress Block Registration
 
 Creating custom blocks for the WordPress Block Editor (Gutenberg).

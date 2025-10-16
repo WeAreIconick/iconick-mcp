@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [hooks, actions, filters, api]
+related: [core/plugin-api, advanced/ajax-development]
+wp_version: 1.2+
+---
+
 # WordPress Hooks System
 
 ## Understanding WordPress Hooks

@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [rest, api, authentication, security]
+related: [rest-api/rest-api-basics, security/capabilities]
+wp_version: 4.7+
+---
+
 # WordPress REST API Authentication
 
 Comprehensive authentication methods for WordPress REST API endpoints.

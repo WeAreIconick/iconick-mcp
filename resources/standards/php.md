@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [standards, php, coding, style]
+related: [standards/javascript, standards/css]
+wp_version: All
+---
+
 # WordPress PHP Coding Standards
 
 Official WordPress PHP coding standards and best practices.

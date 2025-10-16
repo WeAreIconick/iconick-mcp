@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [meta-boxes, custom-fields, admin, ui]
+related: [advanced/custom-post-types, core/database-api]
+wp_version: 2.5+
+---
+
 # WordPress Meta Boxes
 
 ## Basic Meta Box Creation

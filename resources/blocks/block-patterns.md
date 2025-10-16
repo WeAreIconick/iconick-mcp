@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [blocks, patterns, templates, reusable]
+related: [blocks/gutenberg-basics, themes/block-themes]
+wp_version: 5.5+
+---
+
 # WordPress Block Patterns
 
 Block patterns are predefined block layouts that users can insert with one click.

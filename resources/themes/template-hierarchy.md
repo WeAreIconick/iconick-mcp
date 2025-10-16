@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [themes, templates, hierarchy, structure]
+related: [themes/theme-development, advanced/custom-post-types]
+wp_version: All
+---
+
 # WordPress Template Hierarchy
 
 The template hierarchy is WordPress's system for determining which template file to load for any given request. Understanding this hierarchy is crucial for theme development.

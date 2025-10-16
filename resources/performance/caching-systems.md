@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [caching, performance, speed, optimization]
+related: [core/transients-api, performance/database-optimization]
+wp_version: All
+---
+
 # Advanced WordPress Caching Systems
 
 ## Overview

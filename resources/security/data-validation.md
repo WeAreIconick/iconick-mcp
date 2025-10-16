@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [security, validation, input, sanitization]
+related: [security/sanitization, security/escaping, security/nonces]
+wp_version: All
+---
+
 # WordPress Data Validation
 
 Data validation ensures that data is in the expected format before processing.

@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [taxonomies, terms, categories, tags]
+related: [advanced/custom-post-types, core/database-api]
+wp_version: 2.3+
+---
+
 # WordPress Taxonomies
 
 ## Basic Custom Taxonomy Registration

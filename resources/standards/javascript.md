@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [standards, javascript, coding, style]
+related: [standards/php, blocks/gutenberg-basics]
+wp_version: All
+---
+
 # WordPress JavaScript Coding Standards
 
 Official WordPress JavaScript coding standards and best practices.

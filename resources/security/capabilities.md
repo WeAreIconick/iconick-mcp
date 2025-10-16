@@ -1,3 +1,10 @@
+---
+difficulty: Intermediate
+tags: [security, capabilities, permissions, roles]
+related: [security/user-roles, security/data-validation]
+wp_version: 2.0+
+---
+
 # WordPress User Capabilities
 
 Capabilities control what users can do in WordPress.

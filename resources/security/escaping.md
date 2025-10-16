@@ -1,3 +1,10 @@
+---
+difficulty: Beginner
+tags: [security, escaping, output, xss]
+related: [security/sanitization, security/data-validation]
+wp_version: All
+---
+
 # WordPress Output Escaping
 
 Escaping makes data safe for output by encoding special characters.

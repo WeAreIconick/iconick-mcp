@@ -1,3 +1,10 @@
+---
+difficulty: Advanced
+tags: [database, performance, optimization, queries]
+related: [core/database-api, performance/caching-systems]
+wp_version: All
+---
+
 # WordPress Database Performance and Optimization
 
 ## Overview
