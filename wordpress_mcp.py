@@ -187,6 +187,12 @@ def get_query_monitor() -> str:
 def get_wp_cli() -> str:
     """WordPress CLI (WP-CLI) - Command-line interface, automation, management"""
     return load_resource_content("tools", "wp-cli")
+
+@mcp.resource("wordpress://tools/plugin-check")
+def get_plugin_check() -> str:
+    """WordPress Plugin Check - Complete compliance guide for WordPress.org plugin requirements"""
+    return load_resource_content("tools", "plugin-check")
+
 # === COMPLETE BLOCK EDITOR RESOURCES ===
 
 @mcp.resource("wordpress://blocks/innerblocks")
