@@ -354,7 +354,7 @@ def list_code_snippets() -> str:
     return output
 
 @mcp.resource("wordpress://snippets/{category}/{topic}")
-def get_code_snippet(uri: str) -> str:
+def get_code_snippet(category: str, topic: str) -> str:
     """
     Get specific WordPress code snippet
     
@@ -367,21 +367,7 @@ def get_code_snippet(uri: str) -> str:
     
     Use wordpress://snippets/list to see all available snippets
     """
-    from urllib.parse import urlparse
-    
     try:
-        # Parse URI to extract category and topic
-        path = urlparse(uri).path
-        parts = [p for p in path.split('/') if p]
-        
-        if len(parts) < 2:
-            return "Error: URI format should be wordpress://snippets/{category}/{topic}\n\nUse wordpress://snippets/list to see all available snippets."
-        
-        # Extract category and topic from path
-        # parts will be like: ['snippets', 'security', 'sanitize-input']
-        category = parts[1] if len(parts) > 1 else None
-        topic = parts[2] if len(parts) > 2 else None
-        
         if not category or not topic:
             return "Error: Both category and topic are required.\n\nFormat: wordpress://snippets/{category}/{topic}\n\nUse wordpress://snippets/list to see available snippets."
         
