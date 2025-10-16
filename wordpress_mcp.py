@@ -304,6 +304,109 @@ def get_quality_assurance() -> str:
     """Quality Assurance - Code quality tools, security testing, and automated workflows"""
     return load_resource_content("testing", "quality-assurance")
 
+# === CODE SNIPPETS LIBRARY ===
+
+@mcp.resource("wordpress://snippets/list")
+def list_code_snippets() -> str:
+    """Complete catalog of all 62 available code snippets"""
+    snippets_dir = RESOURCES_DIR / "snippets"
+    
+    if not snippets_dir.exists():
+        return "# Code Snippets\n\nSnippet library is being initialized."
+    
+    output = "# WordPress Code Snippets Library\n\n"
+    output += "**62 ready-to-use code examples** for common WordPress development tasks.\n\n"
+    output += "## How to Use\n\n"
+    output += "Ask your AI assistant for any snippet by name. Examples:\n"
+    output += '- "Show me the admin-ajax snippet"\n'
+    output += '- "Get the sanitize-input code"\n'
+    output += '- "Display the custom post type registration example"\n\n'
+    
+    total = 0
+    for category_dir in sorted(snippets_dir.iterdir()):
+        if category_dir.is_dir():
+            category = category_dir.name
+            snippets = sorted([f.stem for f in category_dir.glob("*.md")])
+            total += len(snippets)
+            
+            if snippets:
+                output += f"## {category.replace('-', ' ').title()} ({len(snippets)} snippets)\n\n"
+                for snippet in snippets:
+                    # Get first line as description
+                    try:
+                        with open(category_dir / f"{snippet}.md", 'r', encoding='utf-8') as f:
+                            first_line = f.readline().strip()
+                            title = first_line.replace('#', '').strip() if first_line.startswith('#') else snippet
+                    except:
+                        title = snippet.replace('-', ' ').title()
+                    
+                    output += f"- **{snippet}** - {title}\n"
+                
+                output += "\n"
+    
+    output += f"---\n\n**Total: {total} code snippets**\n\n"
+    output += "All snippets include:\n"
+    output += "- Complete working code examples\n"
+    output += "- Security best practices\n"
+    output += "- WordPress coding standards\n"
+    output += "- Copy-paste ready implementations\n"
+    
+    return output
+
+@mcp.resource("wordpress://snippets/{category}/{topic}")
+def get_code_snippet(uri: str) -> str:
+    """
+    Get specific WordPress code snippet
+    
+    Examples:
+      wordpress://snippets/security/sanitize-input
+      wordpress://snippets/ajax/admin-ajax
+      wordpress://snippets/cpt/register-custom-post-type
+      wordpress://snippets/hooks/save-post-hook
+      wordpress://snippets/performance/caching-transients
+    
+    Use wordpress://snippets/list to see all available snippets
+    """
+    from urllib.parse import urlparse
+    
+    try:
+        # Parse URI to extract category and topic
+        path = urlparse(uri).path
+        parts = [p for p in path.split('/') if p]
+        
+        if len(parts) < 2:
+            return "Error: URI format should be wordpress://snippets/{category}/{topic}\n\nUse wordpress://snippets/list to see all available snippets."
+        
+        # Extract category and topic from path
+        # parts will be like: ['snippets', 'security', 'sanitize-input']
+        category = parts[1] if len(parts) > 1 else None
+        topic = parts[2] if len(parts) > 2 else None
+        
+        if not category or not topic:
+            return "Error: Both category and topic are required.\n\nFormat: wordpress://snippets/{category}/{topic}\n\nUse wordpress://snippets/list to see available snippets."
+        
+        # Load the snippet using the existing function
+        snippet_path = f"snippets/{category}"
+        return load_resource_content(snippet_path, topic)
+        
+    except FileNotFoundError:
+        # List available snippets in this category
+        try:
+            category_path = RESOURCES_DIR / "snippets" / category
+            if category_path.exists():
+                available = sorted([f.stem for f in category_path.glob("*.md")])
+                error_msg = f"Snippet not found: {category}/{topic}\n\n"
+                error_msg += f"Available in '{category}':\n"
+                for snippet in available:
+                    error_msg += f"- {snippet}\n"
+                return error_msg
+            else:
+                return f"Category not found: {category}\n\nUse wordpress://snippets/list to see all categories."
+        except:
+            return "Error loading snippet. Use wordpress://snippets/list to see available snippets."
+    except Exception as e:
+        return f"Error: {str(e)}\n\nUse wordpress://snippets/list to see all available snippets."
+
 # === MCP PROMPTS ===
 
 @mcp.prompt()
@@ -558,6 +661,665 @@ def theme_development_guide():
 - Browser compatibility
 
 Tell me which type of theme you want to build and I'll guide you through it!
+"""
+
+@mcp.prompt()
+def woocommerce_development():
+    """WooCommerce development and customization workflow"""
+    return """I'm developing a WooCommerce extension or customization. Let's work through it:
+
+## What Are You Building?
+
+1. **Payment Gateway** - Custom payment processor integration
+2. **Shipping Method** - Custom shipping calculation logic
+3. **Product Type** - New product variations (subscriptions, rentals, etc.)
+4. **Custom Product Fields** - Additional product data and options
+5. **Checkout Customization** - Custom checkout fields and validation
+6. **Order Management** - Custom order statuses and workflows
+7. **Email Templates** - Custom transactional emails
+8. **Third-Party Integration** - Connect with external services
+
+## I'll Help You With:
+
+### Phase 1: WooCommerce Hooks & Filters
+- Product hooks (pricing, add to cart, display)
+- Cart & checkout hooks (fields, validation, processing)
+- Order hooks (status changes, emails, meta data)
+- Admin hooks (product panels, order details)
+- Email hooks (content, recipients, triggers)
+
+### Phase 2: Security & Data Handling
+- Payment data security (PCI considerations)
+- Order data sanitization and validation
+- Customer data protection
+- WooCommerce-specific nonces and capabilities
+
+### Phase 3: Testing Requirements
+- Test with different product types (simple, variable, grouped)
+- Test complete checkout flow
+- Test with various payment methods
+- Test order status transitions
+- Test refunds and cancellations
+- Test with different shipping zones
+
+### Phase 4: WooCommerce Standards
+- Follow WooCommerce coding standards
+- Use WooCommerce template structure
+- Proper action/filter priorities
+- Translation-ready with WooCommerce text domains
+
+Tell me what you're building and I'll provide complete WooCommerce-specific code!
+"""
+
+@mcp.prompt()
+def gutenberg_block_development():
+    """Modern Gutenberg block development with React"""
+    return """Let's build a professional Gutenberg block with React!
+
+## Tell Me About Your Block
+
+1. What does your block do?
+2. Does it need:
+   - **Inspector controls** (sidebar settings panel)?
+   - **Toolbar controls** (formatting options)?
+   - **InnerBlocks** (nest other blocks inside)?
+   - **Dynamic rendering** (server-side PHP)?
+   - **Custom attributes** (what data to store)?
+
+## Modern Block Development Setup
+
+### Option A: Quick Start with @wordpress/create-block
+
+```bash
+npx @wordpress/create-block@latest my-custom-block
+cd my-custom-block
+npm start
+```
+
+### Option B: Manual Setup (Full Control)
+
+I'll help you create:
+- `block.json` - Block configuration
+- `index.js` - Block registration
+- `edit.js` - React edit component with hooks
+- `save.js` - Frontend save function
+- `style.scss` - Frontend styles
+- `editor.scss` - Editor-only styles
+- `package.json` - Build configuration
+- `webpack.config.js` - Custom build setup
+
+## Modern React Patterns I'll Show You
+
+- `useBlockProps()` - Block wrapper props
+- `InspectorControls` - Settings sidebar
+- `BlockControls` - Toolbar controls
+- `RichText` - Editable text
+- `MediaUpload` - Image selection
+- `ColorPalette` - Color picker
+- `@wordpress/data` - State management
+- `useSelect` and `useDispatch` - Data hooks
+
+## Advanced Features
+
+- Block variations (different starting states)
+- Block patterns (reusable layouts)
+- Block transforms (convert between types)
+- Dynamic blocks (server-side rendering)
+- Parent/child block relationships
+- Block templates (predefined structures)
+
+Describe your block idea and I'll generate complete React code with all the modern patterns!
+"""
+
+@mcp.prompt()
+def rest_api_development():
+    """Complete WordPress REST API development workflow"""
+    return """Let's build a comprehensive WordPress REST API!
+
+## API Design Phase
+
+### Tell Me About Your API:
+
+1. **What resources?** (posts, products, users, custom data, etc.)
+2. **What operations?**
+   - GET (read/list)
+   - POST (create)
+   - PUT/PATCH (update)
+   - DELETE (remove)
+3. **Who can access?** (public, authenticated, specific roles)
+4. **What data format?** (JSON schema, response structure)
+
+## I'll Help You Build:
+
+### Complete REST Endpoints
+
+```php
+// Namespace: myplugin/v1
+// Endpoints:
+//   GET  /items
+//   GET  /items/{id}
+//   POST /items
+//   PUT  /items/{id}
+//   DELETE /items/{id}
+```
+
+### Security Implementation
+- Authentication methods (Application Passwords, OAuth, JWT, custom)
+- Permission callbacks for each endpoint
+- Input validation and sanitization
+- Rate limiting considerations
+- CORS configuration if needed
+
+### Schema Definition
+- Request parameter schemas
+- Response data structures
+- Error response formats
+- Validation rules
+- Type definitions
+
+### Documentation
+- OpenAPI/Swagger spec
+- Example requests with cURL
+- Example responses
+- Error codes and messages
+- Authentication examples
+
+### Advanced Features
+- Pagination and filtering
+- Embedding related data
+- Custom fields in responses
+- Batch operations
+- Webhooks integration
+
+Tell me what data you need to expose and I'll provide complete REST API code with security, validation, and best practices!
+"""
+
+@mcp.prompt()
+def multisite_development():
+    """WordPress Multisite development and network management"""
+    return """Working with WordPress Multisite - let's build it right!
+
+## What Are You Building?
+
+1. **Network Plugin** - Works across all sites
+2. **Network Admin Feature** - Super admin tools
+3. **Cross-Site Functionality** - Share data between sites
+4. **Site-Specific Feature** - Different per site
+5. **Network Theme** - Theme for all sites
+
+## Multisite Concepts I'll Explain:
+
+### Network vs Site
+- Global tables (users, usermeta) vs site tables (posts, options)
+- Network activation vs site activation
+- Super Admin vs Site Admin capabilities
+- Network-wide settings vs site-specific settings
+
+### Essential Functions
+- `switch_to_blog()` / `restore_current_blog()` - Site switching
+- `get_sites()` - List all sites
+- `get_current_blog_id()` - Current site ID
+- `is_main_site()` - Check if main site
+- `get_site_option()` / `update_site_option()` - Network options
+
+### Common Patterns
+
+**Network Admin Pages:**
+```php
+add_action( 'network_admin_menu', 'add_network_page' );
+```
+
+**Cross-Site Queries:**
+```php
+$sites = get_sites();
+foreach ( $sites as $site ) {
+    switch_to_blog( $site->blog_id );
+    // Do something
+    restore_current_blog();
+}
+```
+
+**Network-Wide Settings:**
+```php
+update_site_option( 'network_setting', $value );
+```
+
+### Security Considerations
+- Use `manage_network_options` capability
+- Validate blog IDs before switching
+- Isolate site data properly
+- Escape cross-site data
+
+What multisite feature do you need? I'll provide complete working code!
+"""
+
+@mcp.prompt()
+def database_optimization():
+    """WordPress database performance optimization and troubleshooting"""
+    return """Let's optimize your WordPress database for better performance!
+
+## What's Your Issue?
+
+1. **Slow Queries** - Pages taking too long to load
+2. **High Database Load** - Too many queries
+3. **Large Database** - Database growing too large
+4. **N+1 Query Problems** - Queries in loops
+5. **Missing Indexes** - Slow searches
+6. **Transient Buildup** - Old transients not cleaned
+
+## Diagnostic Tools We'll Use:
+
+- **Query Monitor** - See all database queries
+- **EXPLAIN** - Analyze query execution
+- **wp_queries** - Count queries per page
+- **Transient Manager** - View cached data
+- **Debug Bar** - Performance profiling
+
+## I'll Help You:
+
+### Optimize Slow Queries
+- Analyze with EXPLAIN
+- Add proper indexes
+- Rewrite inefficient queries
+- Use WordPress functions when available
+
+### Reduce Query Count
+- Fix N+1 problems
+- Batch operations
+- Pre-fetch related data
+- Use transients for expensive queries
+
+### Clean Up Database
+- Remove post revisions
+- Delete spam comments
+- Clean expired transients
+- Optimize tables
+- Remove orphaned meta
+
+### Add Indexes
+```sql
+ALTER TABLE wp_postmeta ADD INDEX meta_key_value (meta_key, meta_value(10));
+```
+
+Share your slow queries or describe your performance issue and I'll provide specific optimizations!
+"""
+
+@mcp.prompt()
+def accessibility_compliance():
+    """WCAG 2.1 Level AA accessibility compliance guide"""
+    return """Let's make your WordPress site fully accessible (WCAG 2.1 Level AA)!
+
+## What Are You Making Accessible?
+
+1. **Theme** - Complete theme accessibility
+2. **Plugin** - Accessible plugin features
+3. **Custom Block** - Accessible Gutenberg block
+4. **Admin Interface** - Accessible admin pages
+5. **Specific Feature** - Forms, navigation, etc.
+
+## WCAG 2.1 Level AA Requirements:
+
+### 1. Perceivable
+- **Text Alternatives**: Alt text for all images
+- **Captions**: Video/audio captions
+- **Adaptable**: Proper heading hierarchy (H1, H2, H3)
+- **Distinguishable**: 4.5:1 color contrast ratio minimum
+
+### 2. Operable
+- **Keyboard Accessible**: All functionality via keyboard
+- **No Keyboard Traps**: Can navigate away from everything
+- **Skip Links**: Jump to main content
+- **Focus Indicators**: Visible focus states
+- **Timing**: No time limits or adjustable
+
+### 3. Understandable
+- **Clear Labels**: Form fields properly labeled
+- **Error Identification**: Clear error messages
+- **Consistent Navigation**: Same navigation everywhere
+- **Predictable**: Consistent behavior
+
+### 4. Robust
+- **Valid HTML**: Proper semantic markup
+- **ARIA Attributes**: When needed for complex widgets
+- **Screen Reader Compatible**: Works with assistive tech
+
+## I'll Audit Your Code For:
+
+- Missing alt attributes
+- Insufficient color contrast
+- Missing form labels
+- Keyboard navigation issues
+- Invalid HTML structure
+- Missing ARIA attributes
+- Focus management problems
+- Screen reader compatibility
+
+## Testing Tools I'll Recommend:
+
+- WAVE browser extension
+- axe DevTools
+- Lighthouse accessibility audit
+- Keyboard-only navigation test
+- Screen reader testing (NVDA, JAWS, VoiceOver)
+
+Share your code or describe what you're building and I'll make it fully accessible!
+"""
+
+@mcp.prompt()
+def deployment_workflow():
+    """WordPress deployment, DevOps, and CI/CD workflow"""
+    return """Let's set up a professional WordPress deployment pipeline!
+
+## Current Setup?
+
+1. **Manual deployment** - FTP uploads
+2. **Basic Git** - Git push but manual steps
+3. **Partial automation** - Some scripts
+4. **No automation** - Starting from scratch
+
+## I'll Help You Build:
+
+### Three-Environment Strategy
+- **Development** (local) - WP_DEBUG enabled, test data
+- **Staging** (server) - Production mirror, testing
+- **Production** (live) - Optimized, monitored
+
+### Git Workflow
+```bash
+main (production)
+  ├── develop (staging)
+  │    ├── feature/new-feature
+  │    └── bugfix/fix-issue
+  └── hotfix/critical-fix
+```
+
+### CI/CD Pipeline (GitHub Actions Example)
+```yaml
+# Automated:
+- Run PHPUnit tests
+- Run PHPCS (coding standards)
+- Run ESLint (JavaScript)
+- Build assets (compile SCSS, minify JS)
+- Deploy to staging on develop branch
+- Deploy to production on main branch merge
+```
+
+### Deployment Automation
+- Database migrations (safe schema changes)
+- Search-replace URLs
+- Clear caches
+- Flush permalinks
+- Asset compilation
+- Dependency installation (Composer, npm)
+
+### Rollback Strategy
+- Database backups before deployment
+- Code backups (Git tags)
+- Quick rollback procedures
+- Health checks after deployment
+
+### Environment Configuration
+```php
+// Different settings per environment
+if ( WP_ENVIRONMENT_TYPE === 'development' ) {
+    // Dev settings
+} elseif ( WP_ENVIRONMENT_TYPE === 'staging' ) {
+    // Staging settings  
+} else {
+    // Production settings
+}
+```
+
+Tell me your current deployment process and I'll create an automated pipeline for you!
+"""
+
+@mcp.prompt()
+def troubleshooting_guide():
+    """WordPress debugging, error diagnosis, and troubleshooting"""
+    return """Let's debug your WordPress issue! Tell me what's happening:
+
+## Common WordPress Issues:
+
+### 1. White Screen of Death (WSOD)
+**Symptoms:** Blank white screen, no error message
+**Diagnosis:**
+- Enable WP_DEBUG in wp-config.php
+- Check error logs
+- Check .htaccess file
+- Disable plugins/theme
+
+### 2. Error Establishing Database Connection
+**Symptoms:** Can't connect to database
+**Check:**
+- Database credentials in wp-config.php
+- Database server is running
+- Database name is correct
+- User has proper permissions
+
+### 3. 500 Internal Server Error
+**Symptoms:** Generic 500 error
+**Check:**
+- PHP error logs
+- .htaccess syntax
+- PHP memory limit
+- File permissions
+
+### 4. Plugin Conflicts
+**Symptoms:** Site breaks after plugin activation
+**Solution:**
+- Deactivate all plugins
+- Reactivate one by one
+- Find conflicting plugin
+- Check for JavaScript errors
+
+### 5. Theme Issues
+**Symptoms:** Layout broken, features not working
+**Check:**
+- Switch to default theme
+- Check theme errors
+- Review template files
+- Check for theme updates
+
+### 6. Performance Problems
+**Symptoms:** Slow page loads
+**Diagnose:**
+- Use Query Monitor
+- Check slow queries
+- Review plugin overhead
+- Analyze page size
+
+## Debugging Tools I'll Recommend:
+
+**Enable Debug Mode:**
+```php
+define( 'WP_DEBUG', true );
+define( 'WP_DEBUG_LOG', true );
+define( 'WP_DEBUG_DISPLAY', false );
+define( 'SCRIPT_DEBUG', true );
+define( 'SAVEQUERIES', true );
+```
+
+**Essential Plugins:**
+- Query Monitor (performance analysis)
+- Debug Bar (general debugging)
+- Log Deprecated Notices (code quality)
+
+**Browser Tools:**
+- Console (JavaScript errors)
+- Network tab (HTTP requests)
+- Elements inspector (DOM issues)
+
+## Systematic Debugging Process:
+
+1. **Reproduce** the issue reliably
+2. **Enable debugging** (WP_DEBUG)
+3. **Check logs** (debug.log, error_log)
+4. **Isolate** (disable plugins/theme)
+5. **Test** each component
+6. **Fix** the root cause
+7. **Verify** the solution
+
+Tell me what error or issue you're seeing and I'll help you diagnose and fix it!
+"""
+
+@mcp.prompt()
+def migration_workflow():
+    """WordPress site migration complete guide"""
+    return """Let's migrate your WordPress site safely and efficiently!
+
+## Migration Details
+
+**From:** Where are you migrating from?
+**To:** Where are you migrating to?
+**Type:** Local to live? Hosting to hosting? Development to production?
+
+## Complete Migration Checklist:
+
+### Phase 1: Pre-Migration (CRITICAL)
+- [ ] **Full backup** of source site (database + files)
+- [ ] **Test backup** restore locally
+- [ ] **Document** active plugins and themes
+- [ ] **Check** PHP/MySQL version compatibility
+- [ ] **List** custom code and configurations
+- [ ] **Screenshot** current site (for reference)
+
+### Phase 2: Prepare Target Environment
+- [ ] Install WordPress (same or newer version)
+- [ ] Configure wp-config.php (database credentials)
+- [ ] Set correct file permissions (755 directories, 644 files)
+- [ ] Test database connection
+- [ ] Verify PHP extensions
+
+### Phase 3: Migration Process
+
+**Database Migration:**
+```bash
+# Export from source
+wp db export source-backup.sql
+
+# Import to target
+wp db import source-backup.sql
+
+# Search-replace URLs
+wp search-replace 'oldsite.com' 'newsite.com' --dry-run
+wp search-replace 'oldsite.com' 'newsite.com'
+
+# Search-replace paths if needed
+wp search-replace '/old/path' '/new/path'
+```
+
+**File Migration:**
+- Copy wp-content/uploads (media files)
+- Copy wp-content/themes (custom themes)
+- Copy wp-content/plugins (if not using managed plugins)
+- DON'T copy wp-config.php (create new)
+
+### Phase 4: Post-Migration Tasks
+- [ ] **Flush permalinks** (Settings > Permalinks > Save)
+- [ ] **Regenerate thumbnails** if needed
+- [ ] **Test all forms** (contact, search, etc.)
+- [ ] **Verify media files** are accessible
+- [ ] **Check SSL/HTTPS** configuration
+- [ ] **Test email** sending
+- [ ] **Update DNS** when ready
+- [ ] **Test on mobile** devices
+
+### Phase 5: Verification
+- [ ] All pages load correctly
+- [ ] All plugins activated and working
+- [ ] Theme displays properly
+- [ ] Forms submit successfully
+- [ ] Media displays correctly
+- [ ] Search works
+- [ ] Comments work (if enabled)
+- [ ] User login works
+
+## I'll Generate For You:
+
+- WP-CLI migration script
+- Manual migration checklist
+- Troubleshooting guide for common issues
+- Rollback procedures
+
+Tell me about your migration and I'll create a custom migration plan!
+"""
+
+@mcp.prompt()
+def security_hardening():
+    """WordPress security hardening and best practices"""
+    return """Let's harden your WordPress site security!
+
+## Current Security Assessment
+
+What's your current security setup?
+1. WordPress version up to date?
+2. Security plugins installed?
+3. SSL/HTTPS configured?
+4. File permissions set correctly?
+5. Admin username changed from 'admin'?
+
+## Complete Security Hardening:
+
+### Layer 1: File System Security
+- Proper file permissions (755/644)
+- Disable file editing in admin
+- Remove default WordPress files (readme.html, license.txt)
+- Secure wp-config.php (move outside public_html)
+- Add .htaccess security rules
+
+### Layer 2: Authentication Security
+- Limit login attempts
+- Two-factor authentication (2FA)
+- Strong password enforcement
+- Change admin username
+- Hide login page URL
+- Application passwords for API access
+
+### Layer 3: Database Security
+- Change database table prefix from 'wp_'
+- Secure database credentials
+- Regular database backups
+- Limit database user privileges
+- Use SSL for database connections
+
+### Layer 4: WordPress Configuration
+```php
+// Disable file editing
+define( 'DISALLOW_FILE_EDIT', true );
+
+// Force SSL admin
+define( 'FORCE_SSL_ADMIN', true );
+
+// Security keys (generate unique)
+// https://api.wordpress.org/secret-key/1.1/salt/
+
+// Disable XML-RPC if not needed
+add_filter( 'xmlrpc_enabled', '__return_false' );
+
+// Disable REST API for non-authenticated
+add_filter( 'rest_authentication_errors', function( $result ) {
+    if ( ! is_user_logged_in() ) {
+        return new WP_Error( 'rest_disabled', 'REST API disabled', array( 'status' => 401 ) );
+    }
+    return $result;
+});
+```
+
+### Layer 5: Monitoring & Response
+- Security scanning (Wordfence, Sucuri)
+- Activity logging
+- Uptime monitoring
+- File integrity monitoring
+- Malware scanning
+
+### Layer 6: Updates & Maintenance
+- Auto-update WordPress core
+- Auto-update plugins (carefully)
+- Remove inactive plugins
+- Keep themes updated
+- Regular security audits
+
+I'll provide specific hardening steps for your site. What's your current security concern?
 """
 
 # === MCP TOOLS IMPLEMENTATION ===
