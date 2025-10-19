@@ -1795,6 +1795,488 @@ def plugin_manager(wp_path: str, action: str, plugin: str = None, plugins: list 
         return f"Error running plugin manager: {str(e)}"
 
 @mcp.tool()
+def generate_playground_blueprint(
+    blueprint_type: str = "basic",
+    site_title: str = "My Playground Site",
+    admin_user: str = "admin",
+    admin_password: str = "password",
+    admin_email: str = "admin@example.com",
+    landing_page: str = "/wp-admin/",
+    plugins: list = None,
+    themes: list = None,
+    custom_files: dict = None,
+    php_code: list = None,
+    sql_queries: list = None,
+    networking: bool = False,
+    php_extensions: list = None
+) -> str:
+    """
+    Generate WordPress Playground blueprints for various use cases
+    
+    Args:
+        blueprint_type: Type of blueprint (basic, plugin-dev, theme-dev, woocommerce, multisite, custom)
+        site_title: WordPress site title
+        admin_user: Admin username
+        admin_password: Admin password
+        admin_email: Admin email
+        landing_page: Where to redirect after setup
+        plugins: List of plugin URLs or names to install
+        themes: List of theme URLs or names to install
+        custom_files: Dict of file paths and content to create
+        php_code: List of PHP code snippets to execute
+        sql_queries: List of SQL queries to run
+        networking: Enable networking features
+        php_extensions: List of PHP extensions to include
+    """
+    import json
+    
+    try:
+        # Validate inputs
+        if not blueprint_type or blueprint_type not in ["basic", "plugin-dev", "theme-dev", "woocommerce", "multisite", "custom"]:
+            return "Error: blueprint_type must be one of: basic, plugin-dev, theme-dev, woocommerce, multisite, custom"
+        
+        if not admin_user or not admin_password or not admin_email:
+            return "Error: admin_user, admin_password, and admin_email are required"
+        
+        # Initialize blueprint
+        blueprint = {
+            "landingPage": landing_page,
+            "steps": []
+        }
+        
+        # Add networking if enabled
+        if networking:
+            blueprint["features"] = {
+                "networking": True,
+                "networkingMode": "enabled"
+            }
+        
+        # Add PHP extensions if specified
+        if php_extensions:
+            blueprint["phpExtensionBundles"] = php_extensions
+        
+        # Step 1: Install WordPress
+        blueprint["steps"].append({
+            "step": "installWordPress",
+            "options": {
+                "admin_user": admin_user,
+                "admin_password": admin_password,
+                "admin_email": admin_email,
+                "site_title": site_title
+            }
+        })
+        
+        # Add plugins if specified
+        if plugins:
+            for plugin in plugins:
+                if plugin.startswith("http"):
+                    # URL-based plugin
+                    blueprint["steps"].append({
+                        "step": "installPlugin",
+                        "pluginZipFile": {
+                            "resource": "url",
+                            "url": plugin
+                        }
+                    })
+                else:
+                    # Plugin slug - try to construct URL
+                    plugin_url = f"https://downloads.wordpress.org/plugin/{plugin}.latest-stable.zip"
+                    blueprint["steps"].append({
+                        "step": "installPlugin",
+                        "pluginZipFile": {
+                            "resource": "url",
+                            "url": plugin_url
+                        }
+                    })
+        
+        # Add themes if specified
+        if themes:
+            for theme in themes:
+                if theme.startswith("http"):
+                    # URL-based theme
+                    blueprint["steps"].append({
+                        "step": "installTheme",
+                        "themeZipFile": {
+                            "resource": "url",
+                            "url": theme
+                        }
+                    })
+                else:
+                    # Theme slug - try to construct URL
+                    theme_url = f"https://downloads.wordpress.org/theme/{theme}.latest-stable.zip"
+                    blueprint["steps"].append({
+                        "step": "installTheme",
+                        "themeZipFile": {
+                            "resource": "url",
+                            "url": theme_url
+                        }
+                    })
+        
+        # Add custom files if specified
+        if custom_files:
+            for file_path, content in custom_files.items():
+                blueprint["steps"].append({
+                    "step": "writeFile",
+                    "path": file_path,
+                    "data": content
+                })
+        
+        # Add PHP code if specified
+        if php_code:
+            for code in php_code:
+                blueprint["steps"].append({
+                    "step": "runPHP",
+                    "code": code
+                })
+        
+        # Add SQL queries if specified
+        if sql_queries:
+            for query in sql_queries:
+                blueprint["steps"].append({
+                    "step": "sql",
+                    "query": query
+                })
+        
+        # Add blueprint-specific configurations
+        if blueprint_type == "plugin-dev":
+            # Add development plugins
+            dev_plugins = [
+                "https://downloads.wordpress.org/plugin/query-monitor.latest-stable.zip",
+                "https://downloads.wordpress.org/plugin/debug-bar.latest-stable.zip"
+            ]
+            for plugin_url in dev_plugins:
+                blueprint["steps"].append({
+                    "step": "installPlugin",
+                    "pluginZipFile": {
+                        "resource": "url",
+                        "url": plugin_url
+                    }
+                })
+            
+            # Add sample plugin structure
+            blueprint["steps"].append({
+                "step": "writeFile",
+                "path": "/wp-content/plugins/my-custom-plugin/my-custom-plugin.php",
+                "data": f"""<?php
+/**
+ * Plugin Name: My Custom Plugin
+ * Description: A custom plugin for development
+ * Version: 1.0.0
+ * Author: {admin_user}
+ */
+
+// Prevent direct access
+if (!defined('ABSPATH')) {{
+    exit;
+}}
+
+// Plugin initialization
+add_action('init', function() {{
+    // Your plugin code here
+    add_action('wp_head', function() {{
+        echo '<!-- Custom Plugin Active -->';
+    }});
+}});
+
+// Add admin menu
+add_action('admin_menu', function() {{
+    add_options_page(
+        'Custom Plugin Settings',
+        'Custom Plugin',
+        'manage_options',
+        'custom-plugin',
+        function() {{
+            echo '<div class="wrap"><h1>Custom Plugin Settings</h1><p>Configure your plugin here.</p></div>';
+        }}
+    );
+}});
+"""
+            })
+            
+            blueprint["landingPage"] = "/wp-admin/plugins.php"
+        
+        elif blueprint_type == "theme-dev":
+            # Add sample theme structure
+            blueprint["steps"].append({
+                "step": "writeFile",
+                "path": "/wp-content/themes/my-custom-theme/style.css",
+                "data": f"""/*
+Theme Name: My Custom Theme
+Description: A custom theme for development
+Version: 1.0.0
+Author: {admin_user}
+*/
+
+body {{
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f5f5f5;
+}}
+
+.container {{
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}}
+
+header {{
+    background: #333;
+    color: white;
+    padding: 20px;
+    margin: -20px -20px 20px -20px;
+    border-radius: 8px 8px 0 0;
+}}
+
+h1 {{
+    margin: 0;
+    font-size: 2em;
+}}
+"""
+            })
+            
+            blueprint["steps"].append({
+                "step": "writeFile",
+                "path": "/wp-content/themes/my-custom-theme/index.php",
+                "data": """<?php get_header(); ?>
+
+<div class="container">
+    <header>
+        <h1><?php bloginfo('name'); ?></h1>
+        <p><?php bloginfo('description'); ?></p>
+    </header>
+    
+    <?php if (have_posts()) : ?>
+        <?php while (have_posts()) : the_post(); ?>
+            <article>
+                <h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+                <div class="content">
+                    <?php the_content(); ?>
+                </div>
+            </article>
+        <?php endwhile; ?>
+    <?php endif; ?>
+</div>
+
+<?php get_footer(); ?>"""
+            })
+            
+            blueprint["steps"].append({
+                "step": "writeFile",
+                "path": "/wp-content/themes/my-custom-theme/functions.php",
+                "data": """<?php
+// Theme setup
+function my_custom_theme_setup() {
+    add_theme_support('post-thumbnails');
+    add_theme_support('title-tag');
+    add_theme_support('html5', array('search-form', 'comment-form', 'comment-list', 'gallery', 'caption'));
+}
+add_action('after_setup_theme', 'my_custom_theme_setup');
+
+// Enqueue styles
+function my_custom_theme_styles() {
+    wp_enqueue_style('theme-style', get_stylesheet_uri());
+}
+add_action('wp_enqueue_scripts', 'my_custom_theme_styles');
+
+// Add custom post type
+function create_custom_post_type() {
+    register_post_type('custom_item',
+        array(
+            'labels' => array(
+                'name' => 'Custom Items',
+                'singular_name' => 'Custom Item'
+            ),
+            'public' => true,
+            'has_archive' => true,
+            'supports' => array('title', 'editor', 'thumbnail')
+        )
+    );
+}
+add_action('init', 'create_custom_post_type');
+"""
+            })
+            
+            blueprint["landingPage"] = "/wp-admin/themes.php"
+        
+        elif blueprint_type == "woocommerce":
+            # Add WooCommerce
+            blueprint["steps"].append({
+                "step": "installPlugin",
+                "pluginZipFile": {
+                    "resource": "url",
+                    "url": "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip"
+                }
+            })
+            
+            # Configure WooCommerce
+            blueprint["steps"].append({
+                "step": "runPHP",
+                "code": """<?php
+// Activate WooCommerce
+activate_plugin('woocommerce/woocommerce.php');
+
+// Set up WooCommerce pages
+if (class_exists('WC_Install')) {
+    WC_Install::create_pages();
+}
+
+// Configure basic WooCommerce settings
+update_option('woocommerce_store_address', '123 Store Street');
+update_option('woocommerce_store_city', 'Store City');
+update_option('woocommerce_store_postcode', '12345');
+update_option('woocommerce_default_country', 'US:CA');
+update_option('woocommerce_currency', 'USD');
+update_option('woocommerce_price_thousand_sep', ',');
+update_option('woocommerce_price_decimal_sep', '.');
+update_option('woocommerce_price_num_decimals', 2);
+?>"""
+            })
+            
+            # Add sample products
+            blueprint["steps"].append({
+                "step": "runPHP",
+                "code": """<?php
+// Create sample products
+$product1 = new WC_Product_Simple();
+$product1->set_name('Sample Product 1');
+$product1->set_regular_price(29.99);
+$product1->set_description('This is a sample product for testing WooCommerce functionality.');
+$product1->set_short_description('Sample Product 1');
+$product1->set_status('publish');
+$product1->save();
+
+$product2 = new WC_Product_Simple();
+$product2->set_name('Sample Product 2');
+$product2->set_regular_price(49.99);
+$product2->set_description('Another sample product for testing WooCommerce functionality.');
+$product2->set_short_description('Sample Product 2');
+$product2->set_status('publish');
+$product2->save();
+
+echo 'WooCommerce setup complete with sample products';
+?>"""
+            })
+            
+            blueprint["landingPage"] = "/wp-admin/admin.php?page=wc-admin"
+        
+        elif blueprint_type == "multisite":
+            # Enable multisite
+            blueprint["steps"].append({
+                "step": "runPHP",
+                "code": """<?php
+// Enable multisite
+update_option('MULTISITE', true);
+update_option('SUBDOMAIN_INSTALL', false);
+update_option('DOMAIN_CURRENT_SITE', 'localhost');
+update_option('PATH_CURRENT_SITE', '/');
+update_option('SITE_ID_CURRENT_SITE', 1);
+update_option('BLOG_ID_CURRENT_SITE', 1);
+
+// Add multisite constants to wp-config
+$wp_config = file_get_contents(ABSPATH . 'wp-config.php');
+$multisite_config = "
+// Multisite Configuration
+define('MULTISITE', true);
+define('SUBDOMAIN_INSTALL', false);
+define('DOMAIN_CURRENT_SITE', 'localhost');
+define('PATH_CURRENT_SITE', '/');
+define('SITE_ID_CURRENT_SITE', 1);
+define('BLOG_ID_CURRENT_SITE', 1);
+";
+
+$wp_config = str_replace('/* That\\'s all, stop editing! */', $multisite_config . '/* That\\'s all, stop editing! */', $wp_config);
+file_put_contents(ABSPATH . 'wp-config.php', $wp_config);
+
+echo 'Multisite configuration added';
+?>"""
+            })
+            
+            # Create additional sites
+            blueprint["steps"].append({
+                "step": "runPHP",
+                "code": """<?php
+// Create additional sites
+$site2 = wpmu_create_blog('localhost', '/site2', 'Site 2', 'admin@site2.com');
+$site3 = wpmu_create_blog('localhost', '/site3', 'Site 3', 'admin@site3.com');
+
+if ($site2 && $site3) {
+    echo 'Multisite setup complete with 3 sites';
+} else {
+    echo 'Multisite setup completed with main site';
+}
+?>"""
+            })
+            
+            blueprint["landingPage"] = "/wp-admin/network/"
+        
+        # Final step: Login
+        blueprint["steps"].append({
+            "step": "login",
+            "username": admin_user,
+            "password": admin_password
+        })
+        
+        # Return formatted JSON
+        return f"""# WordPress Playground Blueprint Generated
+
+**Blueprint Type:** {blueprint_type.title()}
+**Site Title:** {site_title}
+**Admin User:** {admin_user}
+**Landing Page:** {landing_page}
+
+## Generated Blueprint JSON:
+
+```json
+{json.dumps(blueprint, indent=2)}
+```
+
+## Usage Instructions:
+
+1. Copy the JSON above
+2. Go to [WordPress Playground](https://playground.wordpress.net/)
+3. Click "Import Blueprint" 
+4. Paste the JSON
+5. Click "Load Blueprint"
+
+## What This Blueprint Does:
+
+{_get_blueprint_description(blueprint_type)}
+
+## Customizations Made:
+
+- WordPress installed with admin user: {admin_user}
+- Site title: {site_title}
+- Landing page: {landing_page}
+{f"- Networking enabled" if networking else ""}
+{f"- PHP extensions: {', '.join(php_extensions)}" if php_extensions else ""}
+{f"- Plugins installed: {len(plugins) if plugins else 0}" if plugins else ""}
+{f"- Themes installed: {len(themes) if themes else 0}" if themes else ""}
+{f"- Custom files created: {len(custom_files) if custom_files else 0}" if custom_files else ""}
+{f"- PHP code executed: {len(php_code) if php_code else 0}" if php_code else ""}
+{f"- SQL queries run: {len(sql_queries) if sql_queries else 0}" if sql_queries else ""}
+
+Ready to use! 🚀"""
+        
+    except Exception as e:
+        return f"Error generating blueprint: {str(e)}"
+
+def _get_blueprint_description(blueprint_type: str) -> str:
+    """Get description for blueprint type"""
+    descriptions = {
+        "basic": "Sets up a basic WordPress installation with admin access",
+        "plugin-dev": "Creates a plugin development environment with debugging tools and sample plugin structure",
+        "theme-dev": "Creates a theme development environment with sample theme files and custom post types",
+        "woocommerce": "Sets up WooCommerce with sample products and store configuration",
+        "multisite": "Configures WordPress multisite with multiple sites",
+        "custom": "Creates a custom setup based on your specifications"
+    }
+    return descriptions.get(blueprint_type, "Custom WordPress setup")
+
+@mcp.tool()
 def theme_customizer(wp_path: str, action: str, theme: str = None, themes: list = None,
                     parent: str = None, child_name: str = None, child_slug: str = None,
                     status: str = "all", limit: int = 10, query: str = None,
