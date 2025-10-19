@@ -51,6 +51,14 @@ def get_rewrite_api() -> str:
 def get_settings_api() -> str:
     """WordPress Settings API - register_setting, settings sections"""
     return load_resource_content("core", "settings")
+
+# === WORDPRESS PLAYGROUND ===
+
+@mcp.resource("wordpress://playground/blueprints")
+def get_playground_blueprints() -> str:
+    """WordPress Playground Blueprints - Complete guide with working examples for setting up WordPress instances"""
+    return load_resource_content("playground", "wordpress-playground-blueprints")
+
 # === THEME DEVELOPMENT ===
 
 @mcp.resource("wordpress://themes/template-hierarchy")
